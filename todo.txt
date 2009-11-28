@@ -1,0 +1,5 @@
+TODO:
+ - test postgres-js
+ - install mojo and write up template wrapper
+ - use express
+ - use node_debug
