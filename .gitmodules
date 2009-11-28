@@ -1,0 +1,9 @@
+[submodule "lib/node-router"]
+	path = lib/node-router
+	url = git@github.com:carlsverre/node-router.git
+[submodule "lib/node_postgres"]
+	path = lib/node_postgres
+	url = git@github.com:carlsverre/node_postgres.git
+[submodule "lib/node_debug"]
+	path = lib/node_debug
+	url = git@github.com:carlsverre/node_debug.git
