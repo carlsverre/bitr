@@ -1,0 +1,16 @@
+var connection_info = {};
+connection_info.hostaddr = "HOSTIP";
+connection_info.port = HOSTPORT
+connection_info.dbname = "DBNAME";
+connection_info.user = "DBUSER";
+connection_info.password = "DBPASS";
+
+function build_conninfo(conninfo) {
+	result = "";
+	for (key in conninfo) {
+		result += key + "=" + conninfo[key] + " ";
+	}
+	return result;
+}
+
+exports.conninfo = build_conninfo(connection_info);
