@@ -3,10 +3,14 @@
 var posix = require('posix');
 process.mixin(GLOBAL, require('./lib/mojo'));
 
-var _puts = require('sys').puts;
+var mem_cache = {};
+mem_cache.add = function (name, data) {
+  this[name] = data;
+}
 
+var _puts = require('sys').puts;
 function puts (str) {
-  _puts('Render.js -> ' + str);
+  _puts('Render: ' + str);
 }
 
 function compare_mtimes (file1, file2, callback) {
@@ -33,7 +37,8 @@ exports.render = function (controller, view, o, callback) {
 
   compare_mtimes(path, path2, function (compare) {
     if (compare <= 0) {
-      cat(path2, function (c) { callback(eval(c)); });
+      if(mem_cache[path2]) callback(eval(mem_cache[path2]));
+      else cat(path2, function (c) { callback(eval(c)); });
     } else {
       puts("Rebuilding cache for [" + path + "]");
       cat(path, function (c) {
@@ -49,6 +54,7 @@ exports.render = function (controller, view, o, callback) {
           });
           mojo.addListener("exit", function (code) {
             posix.close(fd);
+            mem_cache.add(path2, template);
             callback(eval(template));
           });
 
