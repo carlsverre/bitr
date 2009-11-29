@@ -7,3 +7,6 @@
 [submodule "lib/node_debug"]
 	path = lib/node_debug
 	url = git@github.com:carlsverre/node_debug.git
+[submodule "lib/node_sessions"]
+	path = lib/node_sessions
+	url = git@github.com:carlsverre/Node.js-Sessions.git
