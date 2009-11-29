@@ -1,5 +1,3 @@
-process.mixin(GLOBAL, require('../render'));
-
 var gen_o = function () {
   var o = {
     page_title: "Users"

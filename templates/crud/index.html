@@ -3,6 +3,12 @@
 		<title>{{ page_title }}</title>
 	</head>
 	<body>
-		Testing?
+		<table>
+		{{# users }}
+			<tr>
+				<td>{{ username }}</td>
+			</tr>
+		{{/ users }}
+		</table>
 	</body>
 </html>

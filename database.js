@@ -17,7 +17,7 @@ c.addListener("close", function (e) {
   }
 });
 
-exports.c = c;
+exports.query = c.query;
 
 exports.pretty_string = function (result) {
 	str = "";

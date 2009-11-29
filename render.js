@@ -3,6 +3,8 @@
 var posix = require('posix');
 process.mixin(GLOBAL, require('./lib/mojo'));
 
+var rebuilding_cache = {};
+
 var mem_cache = (function () {
   var datastore = {};
 
@@ -55,7 +57,13 @@ function cat (path, callback) {
 
 exports.render = function (controller, view, o, callback) {
   var path  = 'templates/' + controller + '/' + view + '.html',
-      path2 = 'cache/'+controller+'.'+ view + '.html.js';
+  path2 = 'cache/'+controller+'.'+ view + '.html.js';
+
+  var hash = mem_cache.hash(controller, view);
+  if(rebuilding_cache[hash]) {
+    callback("rebuilding cache");
+    return;
+  }
 
   compare_mtimes(path, path2, function (compare) {
     if (compare <= 0) {
@@ -66,6 +74,8 @@ exports.render = function (controller, view, o, callback) {
       });
     } else {
       puts("Rebuilding cache for [" + path + "]");
+      rebuilding_cache[hash] = true;
+
       cat(path, function (c) {
         var template = "";
         var flags = process.O_CREAT|process.O_WRONLY|process.O_TRUNC;
@@ -81,6 +91,8 @@ exports.render = function (controller, view, o, callback) {
             posix.close(fd);
             mem_cache.add(controller, view, template);
             callback(eval(template));
+
+            delete rebuilding_cache[hash];
           });
 
           mojo.write(c);

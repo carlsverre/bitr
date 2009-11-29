@@ -1,5 +1,3 @@
-process.mixin(GLOBAL, require('../render'));
-
 var controller = {
   index: function (req, res) {
     render('views', 'index', {}, function (html) {
