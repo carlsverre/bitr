@@ -7,8 +7,7 @@ var controller = {
     });
   },
   auth: function (req, res) {
-    sys.debug(sys.inspect(req.session.data));
-    if (req.session.data['user_id']) {
+    if ('user_id' in req.session.data) {
       var username = Users.get(req.session.data.user_id).username;
       var o = {
         page_title: username + "'s homepage",

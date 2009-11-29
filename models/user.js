@@ -37,14 +37,19 @@ exports.Users = {
   //TODO: user querying functions
   
   get: function (user_id, username) {
-    if (user_id) {
+    if (user_id !== undefined && user_id < user_db.length) {
       return user_db[user_id];
-    } else {
+
+    } else if (username !== undefined) {
       for (var i in user_db) {
         if (user_db[i].username == username) {
           return user_db[i];
         }
       }
+
+    } else {
+      debug("User Not found {id: " + user_id + ", username: " + username + "}");
+      return;
     }
   }
 }

@@ -21,7 +21,9 @@ var session_middleware = {
   },
 
   headers: function (req) {
-    return [ ["Set-Cookie", req.session.setCookieHeader()] ];
+    var h = {};
+    h["Set-Cookie"] = req.session.setCookieHeader();
+    return h;
   }
 }
 
