@@ -18,7 +18,7 @@ var controller = {
 }
 
 exports.urls = ['^/',
-  ['GET',   '$',           controller.index              ],
+  ['GET',   '$',          controller.index              ],
   ['GET',   'auth$',      controller.auth               ],
   ['POST',  'login$',     controller.login,       'json'],
   ['POST',  'register$',  controller.register,    'json']

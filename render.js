@@ -3,10 +3,32 @@
 var posix = require('posix');
 process.mixin(GLOBAL, require('./lib/mojo'));
 
-var mem_cache = {};
-mem_cache.add = function (name, data) {
-  this[name] = data;
-}
+var mem_cache = (function () {
+  var datastore = {};
+
+  return {
+    hash: function (c,v) {
+      return c+v;
+    },
+
+    add: function (c, v, data) {
+      var h = this.hash(c, v);
+      datastore[h] = data;
+    },
+
+    get: function (c, v) {
+      var h = this.hash(c, v);
+      return datastore[h];
+    },
+
+    has: function (c, v) {
+      var h = this.hash(c, v);
+      return Boolean(
+        datastore[h]
+      );
+    }
+  }
+})();
 
 var _puts = require('sys').puts;
 function puts (str) {
@@ -37,8 +59,11 @@ exports.render = function (controller, view, o, callback) {
 
   compare_mtimes(path, path2, function (compare) {
     if (compare <= 0) {
-      if(mem_cache[path2]) callback(eval(mem_cache[path2]));
-      else cat(path2, function (c) { callback(eval(c)); });
+      if(mem_cache.has(controller,view)) callback(eval(mem_cache.get(controller,view)));
+      else cat(path2, function (c) { 
+        mem_cache.add(controller, view, c);
+        callback(eval(c));
+      });
     } else {
       puts("Rebuilding cache for [" + path + "]");
       cat(path, function (c) {
@@ -54,7 +79,7 @@ exports.render = function (controller, view, o, callback) {
           });
           mojo.addListener("exit", function (code) {
             posix.close(fd);
-            mem_cache.add(path2, template);
+            mem_cache.add(controller, view, template);
             callback(eval(template));
           });
 

@@ -8,7 +8,6 @@ var http    = require('http'),
 
 // setup controllers
 server.map_urls(require('./views/views').urls);
+server.map_urls(require('./views/user_crud').urls);
 
 server.listen(8080);
-
-puts('Server running at http://127.0.0.1:8080/');
