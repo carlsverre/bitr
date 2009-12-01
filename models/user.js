@@ -1,55 +1,84 @@
+var q = require('./user_queries');
 
-var user_db = [];
+var tname = conf.tables.users;
 
 exports.User = function (username, password, email) {
-  // default params
-  this.id = null;
-
-  // default fields
-  this.username     = username;
-  this.fullname     = "";
-  this.last_login   = new Date();
-  this.date_joined  = new Date();
-  this.groups       = [];
-  this.location     = "";
-  this.password     = password;
-  this.email        = email;
-  this.active       = true;
-  this.signature    = "";
+  if(typeof(username) == 'object') {
+    // passing in the query row
+    from_row(username);
+  } else {
+    // go with the defaults
+    this.id = null; 
+    this.username     = username;
+    this.fullname     = "";
+    this.last_login   = new Date();
+    this.date_joined  = new Date();
+    this.groups       = [];
+    this.location     = "";
+    this.password     = password;
+    this.email        = email;
+    this.active       = true;
+    this.signature    = "";
+  }
 
   this.auth = function (password) {
-    if (this.password == password) {
+    if (this..password == password) {
       return true;
     }
     return false;
   }
 
   this.save = function () {
-    // TODO: postgre update/insert query based on Boolean(this.id)
-    user_db.push(this);
-    this.id = user_db.length-1;
+    if(this.id != null) {
+      // update
+      DB.query(DB.simple_update(tname, this, {id: this.id}),
+      function(results) { 
+        debug("user_save results: ");
+        p(results);
+      });
+    } else {
+      DB.query(DB.simple_insert(tname, this, true),
+      function(results) {
+        debug("user_save insert results:");
+        p(results);
+      });
+    }
+  }
+
+  var from_row = function (row) {
+    for (column in row) {
+      var val = row[column];
+      this[column] = val;
+    }
+
   }
 
   //TODO: other user methods such as get_groups
 }
 
 exports.Users = {
-  //TODO: user querying functions
-  
-  get: function (user_id, username) {
-    if (user_id !== undefined && user_id < user_db.length) {
-      return user_db[user_id];
+  // gets all users that match hash
+  // ex. hash = {id:3}
+  get: function (hash, callback) {
+    DB.query(q.simple_select(tname, null, hash),
+    function (rows) {
+      puts("Selected from Users:");
+      DB.pretty_print(rows);
 
-    } else if (username !== undefined) {
-      for (var i in user_db) {
-        if (user_db[i].username == username) {
-          return user_db[i];
-        }
+      if(rows.length == 1) {
+        var user = new User(rows[0]);
+        callback(user);
+        return;
       }
 
-    } else {
-      debug("User Not found {id: " + user_id + ", username: " + username + "}");
-      return;
-    }
+      var users = [];
+
+      for (i in rows) {
+        var row = rows[i];
+        users.push(new User(row));
+      } 
+
+      callback(users);
+    });
   }
 }

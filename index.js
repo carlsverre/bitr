@@ -1,6 +1,6 @@
 // setup global helpers
 process.mixin(GLOBAL, require('sys'));
-process.mixin(GLOBAL, require('./database'));
+process.mixin(GLOBAL, require(./lib/sprintf'));
 process.mixin(GLOBAL, require('./render'));
 process.mixin(GLOBAL, require('./models/user'));
 //process.mixin(GLOBAL, require('./helpers/auth'));
@@ -9,7 +9,8 @@ process.mixin(GLOBAL, require('./helpers/user'));
 // node requires
 var conf      = require('./conf'),
     server    = require('./lib/node-router/node-router'),
-    sessions  = require('./lib/sessions/sessions');
+    sessions  = require('./lib/sessions/sessions'),
+    DB        = require('./database');
 
 // setup controllers
 server.map_urls(require('./views/views').urls);
