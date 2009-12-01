@@ -5,7 +5,7 @@
 	<body>
 		{{# failed }}<p>Auth Failed!</p>{{/ failed }}
 
-		<form action="login" method="post">
+		<form action="auth/login" method="post" enctype="multipart/form-data">
 			Username: <input type="text" name="username" /><br />
 			Password: <input type="password" name="password" /><br />
 			Are you new here? <input type="checkbox" name="register" /><br />

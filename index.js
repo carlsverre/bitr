@@ -1,16 +1,19 @@
+// setup global helpers
 process.mixin(GLOBAL, require('sys'));
 process.mixin(GLOBAL, require('./database'));
 process.mixin(GLOBAL, require('./render'));
 process.mixin(GLOBAL, require('./models/user'));
+//process.mixin(GLOBAL, require('./helpers/auth'));
+process.mixin(GLOBAL, require('./helpers/user'));
 
 // node requires
-var http      = require('http'),
-    conf      = require('./conf'),
+var conf      = require('./conf'),
     server    = require('./lib/node-router/node-router'),
     sessions  = require('./lib/sessions/sessions');
 
 // setup controllers
 server.map_urls(require('./views/views').urls);
+server.map_urls(require('./views/auth').urls);
 
 // setup middleware
 var session_middleware = {
@@ -26,6 +29,7 @@ var session_middleware = {
     return h;
   }
 }
+
 
 server.addMiddleware(session_middleware);
 
