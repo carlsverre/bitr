@@ -1,4 +1,4 @@
-var q = require('./user_queries');
+var conf = require('../conf');
 
 var tname = conf.tables.users;
 
@@ -22,7 +22,7 @@ exports.User = function (username, password, email) {
   }
 
   this.auth = function (password) {
-    if (this..password == password) {
+    if (this.password == password) {
       return true;
     }
     return false;

@@ -1,9 +1,15 @@
-var postgres  = require('./lib/postgres-js/postgres');
-    conf      = require('./conf');
+var postgres    = require('./lib/postgres-js/postgres');
+var pg_parsers  = require('./lib/postgres-js/lib/parsers');
+var pg_OIDS     = require('./lib/postgres-js/lib/type-oids');
+conf = require('./conf');
 
-postgres.DEBUG = 2;
+postgres.DEBUG = 1;
 
-var c = postgres.createConnection.apply(null, conf.conninfo);
+var c = new postgres.Connection(conf.dbinfo.dbname,
+                                conf.dbinfo.user,
+                                conf.dbinfo.password,
+                                conf.dbinfo.port,
+                                conf.dbinfo.hostaddr);
 
 exports.query = c.query;
 
@@ -22,7 +28,8 @@ exports.seralize = function(element) {
   // element is an object
   switch (element.constructor.toString()) {
     case "Date":
-      return inspect(element);  // TODO make this work
+      return pg_parsers.formatDatePostgres(element, pg_OIDS.TIMESTAMPTZ);
+  }
 }
 
 exports.seralize_hash = function(hash, seperator) {

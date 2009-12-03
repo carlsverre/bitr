@@ -1,6 +1,6 @@
 // setup global helpers
 process.mixin(GLOBAL, require('sys'));
-process.mixin(GLOBAL, require(./lib/sprintf'));
+process.mixin(GLOBAL, require('./lib/sprintf'));
 process.mixin(GLOBAL, require('./render'));
 process.mixin(GLOBAL, require('./models/user'));
 //process.mixin(GLOBAL, require('./helpers/auth'));
