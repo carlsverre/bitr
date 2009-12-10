@@ -9,7 +9,7 @@ initialize the submodules in the repo:
 
 The final step is coping conf.js.example to conf.js and filling it out.
 
-Then just run "node index.js" and your off to the races!
+Then just run "node bitr.js" and your off to the races!
 
 License
 =======
