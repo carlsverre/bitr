@@ -18,35 +18,53 @@ exports.seralize = function(element) {
     case "number":
       return element
     case "string":
-      return sprintf("'%s'", element);
+      return sprintf("%s", element);
     case "boolean":
       return (element)?"TRUE":"FALSE";
     case "undefined":
       return "";
- }
+  }
   
   // element is an object
-  switch (element.constructor.toString()) {
+  var rgx = /function (\w\w*)\(\)/i
+  var element_type = rgx.exec(element.constructor.toString())[1];
+  switch (element_type) {
     case "Date":
-      return pg_parsers.formatDatePostgres(element, pg_OIDS.TIMESTAMPTZ);
+      return pg_parsers.formatDateForPostgres(element, pg_OIDS.TIMESTAMPTZ);
   }
+}
+
+function make_esc_func() {
+  var chars = md5(md5(Math.random())).replace(/\d/g,'');
+  var slice = '';
+  for (var i=0;i<chars.length;i++) {
+    var rnum = Math.floor(Math.random() * chars.length);
+    slice+=chars.substring(rnum,rnum+1);
+  }
+  var tag = "$"+slice.slice(0,4)+"$";
+  return function(s) { return tag+exports.seralize(s)+tag};
 }
 
 exports.seralize_hash = function(hash, seperator) {
   var first = true;
+  var set_s = "";
+  var esc = make_esc_func();
   for (key in hash) {
-    if(typeof(key) !== "function") {
-      set_s += ((first)?"":seperator) + key + " = " + hash[key];
-    }
+    if(hash[key] == null) continue;
+    set_s += ((first)?"":seperator) + key + " = " + esc(hash[key]);
     first = false;
   }
+  return set_s;
 }
 
 exports.unzip = function (hash) {
+  var esc = make_esc_func();
+
   var keys=[], values=[];
   for(key in hash) {
+    if(hash[key] == null) continue;
     keys.push(key);
-    values.push(hash[key]);
+    values.push(esc(hash[key]));
   }
   return [keys,values];
 }
@@ -77,22 +95,46 @@ exports.pretty_print = function (result) {
 
 // simple queries
 
-exports.simple_update = function (tbl, set_hash, where_hash) {
-  var set_str = exports.seralize_hash(set_hash, ", ");
-  var where_str = exports.seralize_hash(where_hash, " AND ");
-  return sprintf("UPDATE %s SET %s WHERE %s;", tbl, set_str, where_str);
+exports.simple_update = function (tbl, set, where) {
+  var promise = new process.Promise();
+
+  var set_str = exports.seralize_hash(set, ", ");
+  var where_str = exports.seralize_hash(where, " AND ");
+  var sql = sprintf("UPDATE %s SET %s WHERE %s;", tbl, set_str, where_str);
+  c.query(sql, function(data) {
+    promise.emitSuccess(data);
+  });
+
+  return promise;
 }
 
-exports.simple_select = function (tbl, columns_arr, where_hash) {
-  var columns_str = (columns_arr == null) ? "*" : columns_arr.join(", ");
-  var where_str = exports.seralize_hash(where_hash, " AND ");
-  return sprintf("SELECT %s FROM %s WHERE %s;", columns_str, tbl, where_str);
+exports.simple_select = function (tbl, columns, where) {
+  var promise = new process.Promise();
+
+  var columns_str = (columns == null) ? "*" : columns.join(", ");
+  var where_str = exports.seralize_hash(where, " AND ");
+  
+  var sql = sprintf("SELECT %s FROM %s WHERE %s;", columns_str, tbl, where_str);
+
+  c.query(sql, function(data) {
+    promise.emitSuccess(data);
+  });
+
+  return promise;
 }
 
-exports.simple_insert = function (tbl, set_hash, return_id) {
-  var keys_values = exports.unzip(set_hash);
-  var keys_str    = keys_values[0].join(', ');
-  var values_str  = keys_values[1].join(', ');
-  var return_sql  = " RETURNING id";
-  return sprintf("INSERT INTO %s (%s) VALUES (%s)%s;", tbl, set_str, where_str);
+exports.simple_insert = function (tbl, set, return_id) {
+  var promise = new process.Promise();
+
+  var keys_values = exports.unzip(set);
+  var keys_str    = keys_values[0].join(',');
+  var values_str  = keys_values[1].join(',');
+  var return_sql  = (return_id)?" RETURNING id":"";
+  var sql = sprintf("INSERT INTO %s (%s) VALUES (%s)%s;", tbl, keys_str, values_str, return_sql);
+
+  c.query(sql, function(data) {
+    promise.emitSuccess(data);
+  });
+
+  return promise;
 }

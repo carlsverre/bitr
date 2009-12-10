@@ -46,6 +46,8 @@ function compare_mtimes (file1, file2, callback) {
     }).addErrback(function () {
       callback(1);
     });
+  }).addErrback(function (e) {
+    callback(2);
   });
 }
 
@@ -55,9 +57,16 @@ function cat (path, callback) {
   });
 }
 
-exports.render = function (controller, view, o, callback) {
+exports.render = function (req, controller, view, o, callback) {
+  if(req == null) {
+    debug("ERROR: Render must be called like so: render.call(null, args...)");
+    return;
+  }
+
+  process.mixin(o, req.template_params);
+
   var path  = 'templates/' + controller + '/' + view + '.html',
-  path2 = 'cache/'+controller+'.'+ view + '.html.js';
+      path2 = 'cache/'+controller+'.'+ view + '.html.js';
 
   var hash = mem_cache.hash(controller, view);
   if(rebuilding_cache[hash]) {
@@ -72,6 +81,10 @@ exports.render = function (controller, view, o, callback) {
         mem_cache.add(controller, view, c);
         callback(eval(c));
       });
+    } else if (compare == 2) {
+      // source file not found
+      callback("404 not found");
+
     } else {
       puts("Rebuilding cache for [" + path + "]");
       rebuilding_cache[hash] = true;

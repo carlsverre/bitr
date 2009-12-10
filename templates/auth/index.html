@@ -3,7 +3,7 @@
 		<title>{{ page_title }}</title>
 	</head>
 	<body>
-		{{# failed }}<p>Auth Failed!</p>{{/ failed }}
+        {{# flash }}<div style="background-color: black; color: white;">{{ flash }}</div>{{/ flash }}
 
 		<form action="auth/login" method="post" enctype="multipart/form-data">
 			Username: <input type="text" name="username" /><br />

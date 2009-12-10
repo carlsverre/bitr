@@ -1,3 +1,2 @@
 TODO:
-	- clone inimino sessions
-		-- git clone git://boshi.inimino.org/sessions/
+	* finish program? :D

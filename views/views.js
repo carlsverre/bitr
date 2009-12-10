@@ -1,6 +1,6 @@
 var controller = {
   index: function (req, res) {
-    render('views', 'index', {}, function (html) {
+    render(req, 'views', 'index', {}, function (html) {
       res.simpleHtml(200, html);
     });
   }
