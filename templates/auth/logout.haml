@@ -1,0 +1,11 @@
+!!! XML
+!!! strict
+%html{ xmlns: "http://www.w3.org/1999/xhtml" }
+  %head
+    %title= page_title
+    :css
+      #flash { background-color: black; color: white; }
+      #flash a { color: orange; }
+  %body
+    #flash Logout success! 
+      %a{ href: "/auth" } [login]

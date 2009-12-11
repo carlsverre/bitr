@@ -1,10 +1,11 @@
 // setup global helpers
-process.mixin(GLOBAL, require('sys'));
+process.mixin(GLOBAL, require('./console'));    // this implements sys functions
 process.mixin(GLOBAL, require('./lib/sprintf'));
 process.mixin(GLOBAL, require('./render'));
+
+// include models
 process.mixin(GLOBAL, require('./models/user'));
-//process.mixin(GLOBAL, require('./helpers/auth'));
-process.mixin(GLOBAL, require('./helpers/user'));
+process.mixin(GLOBAL, require('./models/post'));
 
 // node requires
 var requires = {
@@ -25,6 +26,7 @@ var session_middleware = {
   process_request: function (req) {
     options = {lifetime:604800};
     req.session = sessions.lookupOrCreate(req, options);
+    debug(inspect(req.session));
 
     if ('flash' in req.session.data) {
       req.template_params.flash = req.session.data.flash;

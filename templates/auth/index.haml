@@ -1,0 +1,21 @@
+!!! XML
+!!! strict
+%html{ xmlns: "http://www.w3.org/1999/xhtml" }
+  %head
+    %title= page_title
+    :css
+      #flash { background-color: black; color: white; }
+  %body
+    :if{ condition:this['flash']||false }
+      #flash= flash
+    %form{ action: "/auth/login", method: "post", enctype:"multipart/form-data" }
+      %label Username:
+      %input{ type:"text", name:"username" }
+      %br
+      %label Password:
+      %input{ type:"password", name:"password" }
+      %br
+      %label Are you new here?
+      %input{ type:"checkbox", name:"register" }
+      %br
+      %input{ type:"submit", value:"submit" }

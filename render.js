@@ -1,12 +1,19 @@
 // Util class
 
 var posix = require('posix');
-process.mixin(GLOBAL, require('./lib/mojo'));
-
-var rebuilding_cache = {};
+var haml  = require('./lib/haml-js/haml');
 
 var mem_cache = (function () {
   var datastore = {};
+
+  var is_expired = function(element) {
+    var c = element.created;
+    var n = new Date();
+
+    var diff = (n.getTime() - c.getTime()) / 1000*60;
+
+    return diff > 0;   // 0 second cache
+  }
 
   return {
     hash: function (c,v) {
@@ -15,19 +22,24 @@ var mem_cache = (function () {
 
     add: function (c, v, data) {
       var h = this.hash(c, v);
-      datastore[h] = data;
+      datastore[h] = {
+        created:  new Date(),
+        data:     data
+      };
     },
 
     get: function (c, v) {
       var h = this.hash(c, v);
-      return datastore[h];
+      return datastore[h].data;
     },
 
     has: function (c, v) {
       var h = this.hash(c, v);
-      return Boolean(
-        datastore[h]
-      );
+      var element = datastore[h];
+
+      if(!element) return false;
+
+      return is_expired(element);
     }
   }
 })();
@@ -37,81 +49,25 @@ function puts (str) {
   _puts('Render: ' + str);
 }
 
-function compare_mtimes (file1, file2, callback) {
-  posix.stat(file1).addCallback(function (stats) {
-    var mtime1 = stats.mtime;
-    posix.stat(file2).addCallback(function (stats2) {
-      var mtime2 = stats2.mtime;
-      callback((mtime1 < mtime2) ? -1 : ((mtime1 == mtime2) ? 0 : 1));
-    }).addErrback(function () {
-      callback(1);
-    });
-  }).addErrback(function (e) {
-    callback(2);
-  });
-}
-
-function cat (path, callback) {
-  posix.cat(path).addCallback(function (content) {
-    callback(content);
-  });
-}
-
-exports.render = function (req, controller, view, o, callback) {
+exports.render = function (req, controller, view, context, callback) {
   if(req == null) {
     debug("ERROR: Render must be called like so: render.call(null, args...)");
     return;
   }
 
-  process.mixin(o, req.template_params);
+  process.mixin(context, req.template_params);
 
-  var path  = 'templates/' + controller + '/' + view + '.html',
-      path2 = 'cache/'+controller+'.'+ view + '.html.js';
+  var path  = 'templates/' + controller + '/' + view + '.haml';
 
-  var hash = mem_cache.hash(controller, view);
-  if(rebuilding_cache[hash]) {
-    callback("rebuilding cache");
+  // return from mem-cache
+  if (mem_cache.has(controller,view)) {
+    callback(mem_cache.get(controller,view));
     return;
   }
 
-  compare_mtimes(path, path2, function (compare) {
-    if (compare <= 0) {
-      if(mem_cache.has(controller,view)) callback(eval(mem_cache.get(controller,view)));
-      else cat(path2, function (c) { 
-        mem_cache.add(controller, view, c);
-        callback(eval(c));
-      });
-    } else if (compare == 2) {
-      // source file not found
-      callback("404 not found");
-
-    } else {
-      puts("Rebuilding cache for [" + path + "]");
-      rebuilding_cache[hash] = true;
-
-      cat(path, function (c) {
-        var template = "";
-        var flags = process.O_CREAT|process.O_WRONLY|process.O_TRUNC;
-        var promise = posix.open(path2, flags, process.S_IRWXU);
-        promise.addCallback(function (fd) {
-          var mojo = process.createChildProcess("mojo");
-          mojo.addListener("output", function (data) {
-            if(!data) { mojo.kill(); return; }
-            posix.write(fd, data);
-            template += data;
-          });
-          mojo.addListener("exit", function (code) {
-            posix.close(fd);
-            mem_cache.add(controller, view, template);
-            callback(eval(template));
-
-            delete rebuilding_cache[hash];
-          });
-
-          mojo.write(c);
-          mojo.close();
-        });
-      });
-    }
+  haml.render(context, path, function (html) {
+    mem_cache.add(controller, view, html);
+    callback(html);
   });
+
 }

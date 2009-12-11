@@ -27,16 +27,15 @@ CREATE TABLE groups (
 CREATE TABLE posts (
     id              SERIAL PRIMARY KEY UNIQUE,
     user_id         INT NOT NULL REFERENCES users(id),
-    response_to     INT REFERENCES posts(id) DEFAULT -1,
+    response_to     INT REFERENCES posts(id),
     creation_date   TIMESTAMP DEFAULT current_timestamp,
     tags            TEXT,
     content         VARCHAR(200),
     private         BOOLEAN
 );
 
-CREATE TYPE media_type AS ENUM ('photo','video');
 CREATE TABLE media_posts (
-    type            media_type,
+    type            media_type CHECK(type in ('photo', 'video')),
     filename        VARCHAR(256)
 ) INHERITS (posts);
 

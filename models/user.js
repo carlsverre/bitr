@@ -6,7 +6,8 @@ function create_salt(ip) {
   var pieces = ip.split('.');
   sum = 0;
   for (var piece in pieces) sum += (piece * 1);
-  md5(ip+sum*1024);
+
+  return md5(ip+sum*1024);
 }
 
 function encode_password(password, salt) {
@@ -14,12 +15,13 @@ function encode_password(password, salt) {
 }
 
 exports.User = function (username, password, email, ip) {
-  var from_row = function (row) {
-    if (!('columns' in this)) this.columns = {};
+  this.columns = {};
+  var that = this;
 
+  var from_row = function (row) {
     for (column in row) {
       var val = row[column];
-      this.columns[column] = val;
+      that.columns[column] = val;
     }
   }
 
@@ -33,7 +35,7 @@ exports.User = function (username, password, email, ip) {
       username:       username,
       fullname:       "",
       last_login:     new Date(),
-      creation_date:  new Date(),
+      creation_date:  null,
       location:       "",
       password:       "",
       salt:           "",
@@ -47,34 +49,50 @@ exports.User = function (username, password, email, ip) {
   }
 
   this.auth = function (password) {
-    if (this.password == encode_password(password)) {
+    if (this.columns.password == encode_password(password, this.columns.salt)) {
       return true;
     }
     return false;
   }
 
   this.save = function () {
-    if(this.id != null) {
+    var promise = new process.Promise();
+    var that = this;
+    if(that.columns.id != null) {
       // update
-      DB.simple_update(tname, set=this.columns, where={id: this.id}).addCallback(function(results) { 
-        debug("user_save results: ");
-        p(results);
+      DB.simple_update(tname, set=that.columns, where={id: that.columns.id}).addCallback(function(results) { 
+        puts("Updated User: " + that.columns.username);
+        promise.emitSuccess();
       });
     } else {
-      DB.simple_insert(tname, this.columns, true).addCallback(function(results) {
-        debug("user_save insert results:");
-        p(results);
+      DB.simple_insert(tname, that.columns, true).addCallback(function(results) {
+        if('id' in results[0]) {
+          that.columns['id'] = results[0].id;
+          puts("Created User: " + that.columns.username + " ["+that.columns.id+"]");
+          promise.emitSuccess();
+        }
+      }).addErrback(function(err) {
+        error("User.save unknown error:");
+        error("Error Msg: " + err);
+        promise.emitError();
       });
     }
+    return promise;
   }
 
   //TODO: other user methods such as get_groups
+  
+  this.get_posts = function() {
+    return Posts.get({user_id:this.columns.id});
+  }
 }
 
 exports.Users = {
   // gets all users that match hash
   // ex. hash = {id:3}
   get: function (hash, callback) {
+    var promise = new process.Promise();
+
     DB.simple_select(tname, null, hash).addCallback(function (rows) {
       puts("Selected from Users:");
       DB.pretty_print(rows);
@@ -86,7 +104,11 @@ exports.Users = {
         users.push(new User(row));
       } 
 
-      callback(users);
+      promise.emitSuccess(users);
+    }).addErrback(function (err) {
+      promise.emitError(err);
     });
+
+    return promise;
   }
 }

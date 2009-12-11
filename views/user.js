@@ -6,39 +6,29 @@ var gen_o = function () {
   return o;
 }
 
-function render_wrap(view, o, req, res) {
-  render(req, "users", view, o, function(html) {
-    res.simpleHtml(200, html);
-  });
-}
-
 var controller = {
   index: function (req, res, username) {
-    var session = req.session.data;
-
     var o = gen_o();
     o.page_title += " | List";
 
-    render_wrap("index", o, req, res);
-    return;
-
-    var guest = !('user_id' in session);
+    var guest = !('user_id' in req.session.data);
 
     var index_exec = function (user) {
       o.posts = [];
       o.userpage = false;
 
-      if(user !== null && user.username == username) {
-        // this is the users page
-        // TODO: get ALL user's posts
-        //
-        // o.userpage = true;
-        // o.posts.push(user.get_posts());
-        // render_wrap("index", o, res);
-        // return;
+      if(user && (user.columns.username == username)) {
+        o.userpage = true;
+        user.get_posts().addCallback(function (posts) {
+          o.posts.push(posts);
+          render(req, "users", "index", o, function(html) {
+            res.simpleHtml(200, html);
+          });
+        });
+        return;
       }
 
-      Users.get({username:username}, function (data) {
+      Users.get({username:username}).addCallback(function (data) {
         var profile = data[0];
         
         //o.posts.push(profile.get_posts({visibility: "public"});
@@ -58,7 +48,9 @@ var controller = {
           // o.posts.push(profile.get_posts(select));
         }
 
-        // render_wrap("index", o, res);
+        //render(req, "users", "index", o, function(html) {
+        //  res.simpleHtml(200, html);
+        //});
       });
 
 
@@ -66,7 +58,7 @@ var controller = {
 
     if(guest) index_exec(null);
     else {
-      Users.get({id:session.user_id}, function (data) {
+      Users.get({id:req.session.data.user_id}).addCallback(function (data) {
         // TODO: make sure that data isn't null
         index_exec(data[0]);
       });

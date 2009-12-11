@@ -13,3 +13,9 @@
 [submodule "lib/sessions"]
 	path = lib/sessions
 	url = git://boshi.inimino.org/sessions/
+[submodule "lib/haml-js"]
+	path = lib/haml-js
+	url = git@github.com:carlsverre/haml-js.git
+[submodule "lib/consolelog"]
+	path = lib/consolelog
+	url = git://github.com/jazzychad/consolelog.node.js.git

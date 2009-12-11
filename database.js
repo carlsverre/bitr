@@ -3,7 +3,7 @@ var pg_parsers  = require('./lib/postgres-js/lib/parsers');
 var pg_OIDS     = require('./lib/postgres-js/lib/type-oids');
 conf = require('./conf');
 
-postgres.DEBUG = 1;
+postgres.DEBUG = 0;
 
 var c = new postgres.Connection(conf.dbinfo.dbname,
                                 conf.dbinfo.user,
@@ -76,13 +76,13 @@ exports.pretty = function (result) {
     var row = result[i];
     if(first) {
       for (j in row) {
-        str += j + "\t\t";
+        str += j + ", ";
       }
       str += "\n";
       first = false;
     }
     for (j in row) {
-			str += row[j] + "\t\t";
+			str += ((row[j])?row[j]+"":"empty").substr(0,15) + ", ";
 		}
 		str += "\n";
 	}
@@ -90,51 +90,35 @@ exports.pretty = function (result) {
 }
 
 exports.pretty_print = function (result) {
-	print(exports.pretty(result));
+	puts(exports.pretty(result));
 }
 
 // simple queries
 
 exports.simple_update = function (tbl, set, where) {
-  var promise = new process.Promise();
-
   var set_str = exports.seralize_hash(set, ", ");
   var where_str = exports.seralize_hash(where, " AND ");
-  var sql = sprintf("UPDATE %s SET %s WHERE %s;", tbl, set_str, where_str);
-  c.query(sql, function(data) {
-    promise.emitSuccess(data);
-  });
 
-  return promise;
+  var sql = sprintf("UPDATE %s SET %s WHERE %s;", tbl, set_str, where_str);
+
+  return c.query(sql);
 }
 
 exports.simple_select = function (tbl, columns, where) {
-  var promise = new process.Promise();
-
   var columns_str = (columns == null) ? "*" : columns.join(", ");
   var where_str = exports.seralize_hash(where, " AND ");
   
   var sql = sprintf("SELECT %s FROM %s WHERE %s;", columns_str, tbl, where_str);
 
-  c.query(sql, function(data) {
-    promise.emitSuccess(data);
-  });
-
-  return promise;
+  return c.query(sql);
 }
 
 exports.simple_insert = function (tbl, set, return_id) {
-  var promise = new process.Promise();
-
   var keys_values = exports.unzip(set);
   var keys_str    = keys_values[0].join(',');
   var values_str  = keys_values[1].join(',');
   var return_sql  = (return_id)?" RETURNING id":"";
   var sql = sprintf("INSERT INTO %s (%s) VALUES (%s)%s;", tbl, keys_str, values_str, return_sql);
 
-  c.query(sql, function(data) {
-    promise.emitSuccess(data);
-  });
-
-  return promise;
+  return c.query(sql);
 }
