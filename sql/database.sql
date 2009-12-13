@@ -31,18 +31,16 @@ CREATE TABLE posts (
     creation_date   TIMESTAMP DEFAULT current_timestamp,
     tags            TEXT,
     content         VARCHAR(200),
-    private         BOOLEAN
-);
-
-CREATE TABLE media_posts (
-    type            media_type CHECK(type in ('photo', 'video')),
+    private         BOOLEAN,
+    mediatype       VARCHAR(5) CHECK(mediatype in ('text', 'photo', 'video')),
     filename        VARCHAR(256)
-) INHERITS (posts);
+);
 
 -- RELATIONS
 
 -- references users.id groups.id
 CREATE TABLE user_to_group (
+    id              SERIAL PRIMARY KEY UNIQUE,
     group_id        INT NOT NULL REFERENCES groups(id),
     user_id         INT NOT NULL REFERENCES users(id),
     perms           CHAR(3)
@@ -50,6 +48,7 @@ CREATE TABLE user_to_group (
 
 -- references users.id
 CREATE TABLE friends (
+    id              SERIAL PRIMARY KEY UNIQUE,
     user_id         INT NOT NULL REFERENCES users(id),
     friend_id       INT NOT NULL REFERENCES users(id),
     perms           CHAR(3),

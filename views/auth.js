@@ -67,7 +67,7 @@ var controller = {
 }
 
 exports.urls = ['^/auth',
-  ['GET',   '$',          controller.index                 ],
-  ['POST',  '/login$',    controller.login,     'multipart'],
-  ['GET',   '/logout$',    controller.logout                ],
+  ['GET',   '/?$',          controller.index                 ],
+  ['POST',  '/login/?$',    controller.login,     'multipart'],
+  ['GET',   '/logout/?$',    controller.logout                ],
 ];

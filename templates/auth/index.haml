@@ -6,7 +6,7 @@
     :css
       #flash { background-color: black; color: white; }
   %body
-    :if{ condition:this['flash']||false }
+    :if{ condition:this['flash'] }
       #flash= flash
     %form{ action: "/auth/login", method: "post", enctype:"multipart/form-data" }
       %label Username:

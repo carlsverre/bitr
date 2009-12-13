@@ -2,17 +2,22 @@
 
 var posix = require('posix');
 var haml  = require('./lib/haml-js/haml');
+var conf  = require('./conf');
 
 var mem_cache = (function () {
   var datastore = {};
 
   var is_expired = function(element) {
+    if(conf.settings.cache_time == 0) {
+      return false;
+    }
+
     var c = element.created;
     var n = new Date();
 
-    var diff = (n.getTime() - c.getTime()) / 1000*60;
+    var diff = (n.getTime() - c.getTime()) / (1000);
 
-    return diff > 0;   // 0 second cache
+    return diff > conf.settings.cache_time;
   }
 
   return {
@@ -39,7 +44,7 @@ var mem_cache = (function () {
 
       if(!element) return false;
 
-      return is_expired(element);
+      return !is_expired(element);
     }
   }
 })();
@@ -47,6 +52,10 @@ var mem_cache = (function () {
 var _puts = require('sys').puts;
 function puts (str) {
   _puts('Render: ' + str);
+}
+
+function render_haml(context, haml) {
+  return haml.render(context, haml);
 }
 
 exports.render = function (req, controller, view, context, callback) {
@@ -57,16 +66,19 @@ exports.render = function (req, controller, view, context, callback) {
 
   process.mixin(context, req.template_params);
 
-  var path  = 'templates/' + controller + '/' + view + '.haml';
+  var path = 'templates/' + controller + '/' + view + '.haml';
 
-  // return from mem-cache
+  // get template from mem-cache and render
   if (mem_cache.has(controller,view)) {
-    callback(mem_cache.get(controller,view));
+    var text = mem_cache.get(controller,view);
+    callback(haml.render(context, text));
     return;
   }
 
-  haml.render(context, path, function (html) {
-    mem_cache.add(controller, view, html);
+  // else get from filesystem, cache in mem, and render
+  posix.cat(path).addCallback(function (text) {
+    mem_cache.add(controller, view, text);
+    var html = haml.render(context, text);
     callback(html);
   });
 

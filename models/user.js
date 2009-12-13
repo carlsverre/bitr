@@ -82,15 +82,30 @@ exports.User = function (username, password, email, ip) {
 
   //TODO: other user methods such as get_groups
   
-  this.get_posts = function() {
-    return Posts.get({user_id:this.columns.id});
+  this.get_posts = function(hash) {
+    if(!hash) hash = {};
+    process.mixin(hash, {
+      user_id: this.columns.id
+    });
+    return Posts.get(hash);
+  }
+
+  this.get_posts_perms = function(perms) {
+    var hash = {
+      user_id: this.columns.id
+    };
+    return Posts.get(hash, perms);
+  }
+
+  this.get_permissions = function(friend_id) {
+    return Perms.get_friends({user_id:this.columns.id, friend_id:friend_id});
   }
 }
 
 exports.Users = {
   // gets all users that match hash
   // ex. hash = {id:3}
-  get: function (hash, callback) {
+  get: function (hash) {
     var promise = new process.Promise();
 
     DB.simple_select(tname, null, hash).addCallback(function (rows) {
@@ -99,7 +114,7 @@ exports.Users = {
 
       var users = [];
 
-      for (i in rows) {
+      for (var i in rows) {
         var row = rows[i];
         users.push(new User(row));
       } 

@@ -6,6 +6,7 @@ process.mixin(GLOBAL, require('./render'));
 // include models
 process.mixin(GLOBAL, require('./models/user'));
 process.mixin(GLOBAL, require('./models/post'));
+process.mixin(GLOBAL, require('./models/perms'));
 
 // node requires
 var requires = {

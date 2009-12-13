@@ -3,12 +3,14 @@ var conf = require('../conf');
 var tname = conf.tables.posts;
 
 exports.Post = function (user, post, content, tags, private, media_type, filename) {
+  var that = this;
+
   var from_row = function (row) {
-    if (!('columns' in this)) this.columns = {};
+    if (!('columns' in that)) that.columns = {};
 
     for (column in row) {
       var val = row[column];
-      this.columns[column] = val;
+      that.columns[column] = val;
     }
   }
 
@@ -24,33 +26,26 @@ exports.Post = function (user, post, content, tags, private, media_type, filenam
       creation_date:  null,
       tags:           tags,
       content:        content,
-      private:        private
+      private:        private,
+      media_type:     (media_type)?"text":media_type,
+      filename:       filename
     }
 
-    if (media_type !== null) {
-      this.columns.media_type = media_type;
-      this.columns.filename = filename;
-    }
-  }
-
-  if (this.columns.media_type !== null) {
-    this.tname = conf.tables.media_posts;
   }
 
   this.save = function () {
     var promise = process.Promise();
-    var cols = this.columns;
-    if(cols.id != null) {
+    if(that.columns.id != null) {
       // update
-      DB.simple_update(tname, set=cols, where={id: cols.id}).addCallback(function(results) { 
-        puts("Updated Post: " + cols.username);
+      DB.simple_update(that.tname, set=that.columns, where={id: that.columns.id}).addCallback(function(results) { 
+        puts("Updated Post: " + that.columns.username);
         promise.emitSuccess();
       });
     } else {
-      DB.simple_insert(tname, cols, true).addCallback(function(results) {
+      DB.simple_insert(that.tname, that.columns, true).addCallback(function(results) {
         if('id' in results[0]) {
-          cols['id'] = results[0].id;
-          puts("Created Post: " + cols.content + " ["+cols.id+"]");
+          that.columns['id'] = results[0].id;
+          puts("Created Post: " + that.columns.content + " ["+that.columns.id+"]");
           promise.emitSuccess();
         } else {
           debug("Post.save unknown error:");
@@ -68,23 +63,37 @@ exports.Post = function (user, post, content, tags, private, media_type, filenam
 exports.Posts = {
   // gets all posts that match hash
   // ex. hash = {id:3}
-  get: function (hash) {
+  get: function (hash, perms) {
     var promise = new process.Promise();
-    DB.simple_select(tname, null, hash).addCallback(function (rows) {
+
+    var parse_posts = function(rows) {
       puts("Selected from Posts:");
       DB.pretty_print(rows);
 
       var posts = [];
 
-      for (i in rows) {
+      for (var i in rows) {
         var row = rows[i];
         posts.push(new Post(row));
       } 
 
       promise.emitSuccess(posts);
-    }).addErrback(function (err) {
-      promise.emitError(err);
-    });
+    };
+
+    if(perms) {
+      var sql = "SELECT * FROM ? WHERE user_id=?" + 
+                "AND ( (private=false) OR (mediatype IN ("+perms+")) )";
+
+      DB.query(sql, [tposts, hash.user_id]).addCallback(parse_posts)
+      .addErrback(function (err) {
+        promise.emitError(err);
+      });
+    } else {
+      DB.simple_select(tname, null, hash).addCallback(parse_posts)
+      .addErrback(function (err) {
+        promise.emitError(err);
+      });
+    }
 
     return promise;
   }
