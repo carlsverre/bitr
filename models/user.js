@@ -57,7 +57,6 @@ exports.User = function (username, password, email, ip) {
 
   this.save = function () {
     var promise = new process.Promise();
-    var that = this;
     if(that.columns.id != null) {
       // update
       DB.simple_update(tname, set=that.columns, where={id: that.columns.id}).addCallback(function(results) { 

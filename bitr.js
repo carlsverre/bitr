@@ -21,6 +21,7 @@ process.mixin(GLOBAL, requires);
 server.map_urls(require('./views/views').urls);
 server.map_urls(require('./views/auth').urls);
 server.map_urls(require('./views/user').urls);
+server.map_urls(require('./views/posts').urls);
 
 // setup middleware
 var session_middleware = {

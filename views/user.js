@@ -6,13 +6,12 @@ var controller = {
     var guest = !('user_id' in req.session.data);
 
     var index_exec = function (user) {
-      o.posts = [];
       o.userpage = false;
 
       if(user && (user.columns.username == username)) {
         o.userpage = true;
         user.get_posts().addCallback(function (posts) {
-          o.posts.push(posts);
+          o.posts = posts;
           render(req, "users", "index", o, function(html) {
             res.simpleHtml(200, html);
           });
@@ -38,7 +37,7 @@ var controller = {
             var perm = perms[0];
 
             profile.get_posts_perms(perm).addCallback(function (posts) {
-              o.posts.push(posts);
+              o.posts = posts;
               render(req, "users", "index", o, function(html) {
                 res.simpleHtml(200, html);
               });
@@ -46,7 +45,7 @@ var controller = {
           });
         } else {
           profile.get_posts({private:false}).addCallback(function (posts) {
-            o.posts.push(posts);
+            o.posts = posts;
             render(req, "users", "index", o, function(html) {
               res.simpleHtml(200, html);
             });

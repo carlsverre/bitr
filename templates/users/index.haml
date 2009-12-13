@@ -1,8 +1,20 @@
-!!! XML
 !!! strict
 %html{ xmlns: "http://www.w3.org/1999/xhtml" }
   %head
     %title= page_title
   %body
-    #content Is this your homepage?
-      =userpage
+    :if{condition: userpage}
+      %form{ action: "/posts/create", method: "post", enctype: "multipart/form-data" }
+        %label Content:
+        %textarea{ name: "content", rows:"5", cols:"30" }
+        %br
+        %label Tags: 
+        %input{ type: "text", name: "tags" }
+        %br
+        %label Private?
+        %input{ type: "checkbox", name: "private" }
+        %br
+        %input{ type: "submit", value: "Shout!" }
+    %ul.posts
+      :foreach{ array: posts, value: "post" }
+        %li= post.columns.content

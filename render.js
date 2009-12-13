@@ -54,16 +54,13 @@ function puts (str) {
   _puts('Render: ' + str);
 }
 
-function render_haml(context, haml) {
-  return haml.render(context, haml);
-}
-
 exports.render = function (req, controller, view, context, callback) {
   if(req == null) {
     debug("ERROR: Render must be called like so: render.call(null, args...)");
     return;
   }
 
+  // mixin some magic
   process.mixin(context, req.template_params);
 
   var path = 'templates/' + controller + '/' + view + '.haml';

@@ -2,7 +2,7 @@ var conf = require('../conf');
 
 var tname = conf.tables.posts;
 
-exports.Post = function (user, post, content, tags, private, media_type, filename) {
+exports.Post = function (user_id, post_id, content, tags, private, media_type, filename) {
   var that = this;
 
   var from_row = function (row) {
@@ -14,15 +14,15 @@ exports.Post = function (user, post, content, tags, private, media_type, filenam
     }
   }
 
-  if(typeof(user) == 'object') {
+  if(typeof(user_id) == 'object') {
     // passing in the query row
-    from_row(user);
+    from_row(user_id);
   } else {
     // go with the defaults
     this.columns = {
       id:             null,
-      user_id:        user.columns.id,
-      response_to:    (post.columns.id || -1),
+      user_id:        user_id,
+      response_to:    (post_id || null),
       creation_date:  null,
       tags:           tags,
       content:        content,
@@ -34,15 +34,15 @@ exports.Post = function (user, post, content, tags, private, media_type, filenam
   }
 
   this.save = function () {
-    var promise = process.Promise();
+    var promise = new process.Promise();
     if(that.columns.id != null) {
       // update
-      DB.simple_update(that.tname, set=that.columns, where={id: that.columns.id}).addCallback(function(results) { 
+      DB.simple_update(tname, set=that.columns, where={id: that.columns.id}).addCallback(function(results) { 
         puts("Updated Post: " + that.columns.username);
         promise.emitSuccess();
       });
     } else {
-      DB.simple_insert(that.tname, that.columns, true).addCallback(function(results) {
+      DB.simple_insert(tname, that.columns, true).addCallback(function(results) {
         if('id' in results[0]) {
           that.columns['id'] = results[0].id;
           puts("Created Post: " + that.columns.content + " ["+that.columns.id+"]");
