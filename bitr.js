@@ -28,7 +28,6 @@ var session_middleware = {
   process_request: function (req) {
     options = {lifetime:604800};
     req.session = sessions.lookupOrCreate(req, options);
-    debug(inspect(req.session));
 
     if ('flash' in req.session.data) {
       req.template_params.flash = req.session.data.flash;

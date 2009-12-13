@@ -11,5 +11,5 @@ var controller = {
 
 exports.urls = ['^/',
   ['GET',       '$',    controller.index],
-  ['GET',       'static/([^/]+)$',    controller.static],
+  ['GET',       'static/(.+)$',    controller.static],
 ];

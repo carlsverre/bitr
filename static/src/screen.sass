@@ -1,0 +1,43 @@
+@import partials/base.sass
+
++blueprint-typography("body.bp")
+
+body.bp
+  +blueprint-scaffolding
+  .container
+    +container
+
+a
+  +link-colors(#00c, #0cc, #c0c, #ccc, #cc0)
+  +hover-link
+
+body
+  #header
+    +column(24, true)
+    :border-bottom 1px solid #ccc
+    :padding-bottom 0.2em
+
+    h3
+      :float left
+      :margin-right 1em
+      :margin-bottom 0px
+
+    #navigation
+      +horizontal-list
+      a
+        :font-size 1.5em
+        :line-height 1
+        :text-decoration none
+        :margin-right 1em
+
+  #main-content.userpage
+    +column(24, true)
+    ol.posts
+      li
+        +column(22,true)
+        +no-bullet
+        :margin-bottom 0.2em
+        .meta
+          :font-size 0.8em
+      hr
+        +colruler

@@ -49,10 +49,31 @@ var mem_cache = (function () {
   }
 })();
 
-var _puts = require('sys').puts;
-function puts (str) {
-  _puts('Render: ' + str);
-}
+// initialize partials
+var partials = {};
+
+(function () {
+  var partials_dir = conf.settings.partials_dir;
+
+  posix.readdir(partials_dir)
+  .addCallback(function (list) {
+    var get_next = function(i) {
+      if(i >= list.length) return;
+
+      var partial_src = list[i];
+      var partial = partial_src.replace('.html','');
+      var partial_path = partials_dir + partial_src;
+
+      posix.cat(partial_path)
+      .addCallback(function (html) {
+        partials[partial] = html;
+        get_next(i+1);
+      });
+    }
+
+    get_next(0);
+  });
+})();
 
 exports.render = function (req, controller, view, context, callback) {
   if(req == null) {
@@ -62,6 +83,7 @@ exports.render = function (req, controller, view, context, callback) {
 
   // mixin some magic
   process.mixin(context, req.template_params);
+  process.mixin(context, partials);
 
   var path = 'templates/' + controller + '/' + view + '.haml';
 

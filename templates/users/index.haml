@@ -2,19 +2,27 @@
 %html{ xmlns: "http://www.w3.org/1999/xhtml" }
   %head
     %title= page_title
-  %body
-    :if{condition: userpage}
-      %form{ action: "/posts/create", method: "post", enctype: "multipart/form-data" }
-        %label Content:
-        %textarea{ name: "content", rows:"5", cols:"30" }
-        %br
-        %label Tags: 
-        %input{ type: "text", name: "tags" }
-        %br
-        %label Private?
-        %input{ type: "checkbox", name: "private" }
-        %br
-        %input{ type: "submit", value: "Shout!" }
-    %ul.posts
-      :foreach{ array: posts, value: "post" }
-        %li= post.columns.content
+    = head_meta
+  %body.bp
+    .container
+      = header
+      #main-content.userpage
+        %h2 Carl Sverre
+        :if{condition: userpage}
+          %form{ action: "/posts/create", method: "post", enctype: "multipart/form-data" }
+            %label Content:
+            %textarea{ name: "content", rows:"5", cols:"30" }
+            %br
+            %label Tags: 
+            %input{ type: "text", name: "tags" }
+            %br
+            %label Private?
+            %input{ type: "checkbox", name: "private" }
+            %br
+            %input{ type: "submit", value: "Shout!" }
+        %ol.posts
+          :foreach{ array: posts, value: "post" }
+            %li{id:post.columns.id+""}= post.columns.content
+              .meta Posted at 
+                =post.columns.creation_date
+            %hr

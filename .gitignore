@@ -1,2 +1,3 @@
 cache/*.js
 conf.js
+static/src/.sass-cache/*
