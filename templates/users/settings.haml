@@ -8,6 +8,8 @@
       = header
       #main-content.settingspage
         = users_title
+        :if{ condition:this['flash'] }
+          #flash= flash
         %form#settingsform{ action: sprintf("/users/save_settings",user.columns.username), method: "post", enctype: "multipart/form-data" }
           .group
             %label Full Name: 
@@ -20,7 +22,8 @@
             %input.item{ type: "text", name: "email", value: _(user.columns.email) }
           .group
             %label Description:
-            %textarea.item{ name: "signature", value: _(user.columns.signature) }
+            %textarea.item{ name: "signature" }
+              =_(user.columns.signature)
           .passwordgroup
             %label Change Password: (leave blank to ignore)
             %input{ type: "password", name: "password" }

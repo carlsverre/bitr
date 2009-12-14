@@ -60,23 +60,42 @@ body
     +column(24, true)
 
     .title
-      :margin-bottom 10px
-      h2
+      .header
         +hover-link
         :font-size 2.5em
-        :margin-bottom 4px
+        :margin-bottom 6px
         :line-height 0.5
         :margin-top 4px
+        :text-transform capitalize
+      .subheader
+        :font-family Gill Sans, Verdana
+        :font-size 0.8em
+        :line-height 14px
+        :text-transform uppercase
+        :letter-spacing 2px
+        :font-weight bold
+        :text-indent 10px
+        :color #004ACC
+
       ul
+        +column(6)
+        :padding 3px
+        +border-radius("5px")
+        :border 1px solid #CFCFB5
+        :background-color #fff
         +horizontal-list
         +no-bullets
-        :margin-left 10px
-        a
+        li
           :color #3B809F
           :font-family Verdana, sans-serif
           :font-size 0.8em
-          +hover-link
           :text-transform lowercase
+          a
+            +hover-link
+      hr
+        :background none
+        :border none
+        :margin-bottom 1.45em
 
     form
       +column(22, true)
@@ -113,6 +132,37 @@ body
           :background #B5B5B5 none repeat scroll 0 0
           :cursor pointer
 
+    #friend_wall
+      +column(21, true)
+      .friend_box
+        +column(3)
+        :-moz-box-shadow 0 1px 2px rgba(0, 0, 0, 0.7) inset
+        :padding 2px
+        :background-color #E8EDF2
+        :text-align center
+        :border 1px solid #555
+        +border-radius("3px")
+    
+    ol.posts
+      li.post
+        +border-radius("10px")
+        :background-color #FFF
+        +column(22,true)
+        :padding 3px
+        +no-bullet
+        :margin-bottom 0.5em
+        &:first-child
+          :font-size 1.3em
+        #content
+          :font-size 1.1em
+          :font-family "Lucida Grande","Lucida Sans Unicode","Lucida Sans",Helvetica,Arial,sans-serif
+          :color #735757
+        ul.meta
+          +no-bullet
+          :color #619BC7
+          :font-family Verdana, sans-serif
+          :font-size 0.7em
+
     &.loginpage
       form#loginform
         #submit
@@ -140,23 +190,6 @@ body
         #submit
           :float right
       
-      ol.posts
-        li.post
-          +border-radius("10px")
-          :background-color #FFF
-          +column(22,true)
-          :padding 3px
-          +no-bullet
-          :margin-bottom 0.5em
-          #content
-            :font-size 1.1em
-            :font-family "Lucida Grande","Lucida Sans Unicode","Lucida Sans",Helvetica,Arial,sans-serif
-            :color #735757
-          ul.meta
-            +no-bullet
-            :color #619BC7
-            :font-family Verdana, sans-serif
-            :font-size 0.7em
 
     &.friendpage
       form#friendform
@@ -188,17 +221,6 @@ body
             :margin-right 10px
             :padding 3px
 
-      #friend_wall
-        +column(21, true)
-        #friend_box
-          +column(3)
-          :-moz-box-shadow 0 1px 2px rgba(0, 0, 0, 0.7) inset
-          :padding 2px
-          :background-color #E8EDF2
-          :text-align center
-          :border 1px solid #555
-          +border-radius("3px")
-
     &.settingspage
       form#settingsform
         .passwordgroup
@@ -208,3 +230,17 @@ body
             +column(8)
           input
             +column(6)
+
+    &.groupspage
+      ul#groups
+        li.group
+          +border-radius("10px")
+          :background-color #FFF
+          +column(22,true)
+          :padding 3px
+          +no-bullet
+          :margin-bottom 0.5em
+          a
+            :font-size 1.1em
+            :font-family "Lucida Grande","Lucida Sans Unicode","Lucida Sans",Helvetica,Arial,sans-serif
+            :color #735757

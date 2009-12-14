@@ -1,0 +1,7 @@
+:if{condition: 'group' in this}
+  .title
+    %a{href:"/groups/"+group.columns.name}
+      .header= group.columns.name
+    :if{condition: group.columns['description']}
+      .subheader= group.columns.description
+    %hr

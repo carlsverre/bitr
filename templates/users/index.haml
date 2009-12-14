@@ -28,4 +28,4 @@
                 :if{condition: userpage}
                   %li Posted by 
                     %a{href:"/users/"+post.user.columns.username}
-                      =post.user.columns.username
+                      =(post.user.columns.username==user.columns.username)?"you":post.user.columns.username

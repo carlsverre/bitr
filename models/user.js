@@ -14,7 +14,7 @@ function encode_password(password, salt) {
   return md5(salt+password+salt);
 }
 
-exports.User = function (username, password, email, ip) {
+exports.User = function (username, password, ip) {
   this.columns = {};
   var that = this;
 
@@ -23,6 +23,11 @@ exports.User = function (username, password, email, ip) {
       var val = row[column];
       that.columns[column] = val;
     }
+  }
+
+  this.set_password = function (password, ip) {
+    this.columns.salt = create_salt(ip);
+    this.columns.password = encode_password(password, this.columns.salt);
   }
 
   if(typeof(username) == 'object') {
@@ -39,13 +44,12 @@ exports.User = function (username, password, email, ip) {
       location:       "",
       password:       "",
       salt:           "",
-      email:          email,
+      email:          null,
       active:         true,
       signature:      ""
     }
 
-    this.columns.salt = create_salt(ip);
-    this.columns.password = encode_password(password, this.columns.salt);
+    this.set_password(password, ip);
   }
 
   this.auth = function (password) {
@@ -60,7 +64,8 @@ exports.User = function (username, password, email, ip) {
     var promise = new process.Promise();
     if(that.columns.id != null) {
       // update
-      DB.simple_update(tname, set=that.columns, where={id: that.columns.id}).addCallback(function(results) { 
+      DB.simple_update(tname, that.columns, {id: that.columns.id})
+      .addCallback(function(results) { 
         puts("Updated User: " + that.columns.username);
         promise.emitSuccess();
       });
@@ -80,8 +85,6 @@ exports.User = function (username, password, email, ip) {
     return promise;
   }
 
-  //TODO: other user methods such as get_groups
-  
   this.get_posts = function(hash) {
     if(!hash) hash = {};
     process.mixin(hash, {
@@ -104,7 +107,7 @@ exports.User = function (username, password, email, ip) {
   this.get_friends = function() {
     var promise = new process.Promise();
     var sql = sprintf("SELECT * FROM %s WHERE id IN "+
-                      "(SELECT friend_id FROM friends WHERE user_id = ?)",tname);
+                      "(SELECT friend_id FROM %s WHERE user_id = ?)",tname,conf.tables.friends);
     DB.query(sql, [this.columns.id]).addCallback(function (rows) {
       var users = [];
 
@@ -116,6 +119,10 @@ exports.User = function (username, password, email, ip) {
       promise.emitSuccess(users);
     });
     return promise;
+  }
+
+  this.get_groups = function() {
+    return Groups.get_users_groups(this);
   }
 }
 
@@ -139,6 +146,24 @@ exports.Users = {
       promise.emitSuccess(users);
     }).addErrback(function (err) {
       promise.emitError(err);
+    });
+
+    return promise;
+  },
+  get_users_in_group: function (group) {
+    var promise = new process.Promise();
+    var sql = sprintf("SELECT * FROM %s p WHERE id IN"+
+                      " (SELECT user_id FROM %s WHERE group_id = ?) ORDER BY creation_date DESC", tname, conf.tables.usergroup);
+
+    DB.query(sql, [group.columns.id])
+    .addCallback(function (rows) {
+      var users = [];
+
+      for (var i in rows) {
+        var row = rows[i];
+        users.push(new User(row));
+      } 
+      promise.emitSuccess(users);
     });
 
     return promise;

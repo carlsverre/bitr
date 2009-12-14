@@ -4,8 +4,13 @@
     %li
       %a{href:"/"} Home
     %li
-      %a{href:"/auth"} Login/Register
-  :if{condition: ('user' in this && user != null)}
+      %a{href:"/groups"} Groups
+    %li
+      %a{href:"/users"} Users
+    :if{condition: !(this['user'] && user != null)}
+      %li
+        %a{href:"/auth"} Login/Register
+  :if{condition: (this['user'] && user != null)}
     %ul#user_nav
       %li
         %a{href:"/users/"+user.columns.username}= user.columns.username

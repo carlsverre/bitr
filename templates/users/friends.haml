@@ -24,9 +24,10 @@
                 %input{ type: "checkbox", name: "video", checked: "yes" }
         #friend_wall
           :foreach{ array: friends, value: "friend" }
-              #friend_box
+              .friend_box
                 %a{href: '/users/'+friend.columns.username}
                   %img{src: gravatar(friend)}
                 =friend.columns.username
-                %a{href: '/friends/delete/'+friend.columns.id, title: "delete"}
-                  [x]
+                :if{condition: userpage}
+                  %a{href: '/friends/delete/'+friend.columns.id, title: "delete"}
+                    [x]

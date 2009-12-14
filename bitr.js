@@ -10,6 +10,7 @@ process.mixin(GLOBAL, require('./render'));
 process.mixin(GLOBAL, require('./models/user'));
 process.mixin(GLOBAL, require('./models/post'));
 process.mixin(GLOBAL, require('./models/perms'));
+process.mixin(GLOBAL, require('./models/group'));
 
 // node requires
 var requires = {
@@ -25,6 +26,7 @@ server.map_urls(require('./views/auth').urls);
 server.map_urls(require('./views/user').urls);
 server.map_urls(require('./views/posts').urls);
 server.map_urls(require('./views/friends').urls);
+server.map_urls(require('./views/groups').urls);
 
 // setup middleware
 var session_middleware = {

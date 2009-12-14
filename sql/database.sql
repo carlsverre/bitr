@@ -7,7 +7,7 @@ CREATE TABLE users (
     username        VARCHAR(128) UNIQUE NOT NULL,
     fullname        VARCHAR(128),
     last_login      TIMESTAMP DEFAULT current_timestamp,
-    creation_date   DATE DEFAULT current_date,
+    creation_date   TIMESTAMP DEFAULT current_timestamp,
     location        VARCHAR(128),
     password        CHAR(32) NOT NULL,      -- MD5 PASSWORD
     salt            CHAR(32) NOT NULL,      -- PASSWORD SALT (MD5)
@@ -19,7 +19,8 @@ CREATE TABLE users (
 CREATE TABLE groups (
     id              SERIAL PRIMARY KEY UNIQUE,
     name            VARCHAR(128) UNIQUE,
-    creation_date   DATE,
+    owner           INT NOT NULL REFERENCES users(id),
+    creation_date   TIMESTAMP DEFAULT current_timestamp,
     description     TEXT
 );
 

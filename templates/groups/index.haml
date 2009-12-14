@@ -1,0 +1,33 @@
+!!! strict
+%html{ xmlns: "http://www.w3.org/1999/xhtml" }
+  %head
+    %title= page_title
+    = head_meta
+  %body.bp
+    .container
+      = header
+      #main-content.groupspage
+        = groups_title
+        :if{condition: this['groups']}
+          %ul#groups
+            :foreach{ array: groups, value: "group" }
+                %li.group
+                  %a{href: '/groups/'+group.columns.name}
+                    =group.columns.name
+        :if{condition: this['posts']}
+          %h2 Posts
+          %ol.posts
+            :foreach{ array: posts, value: "post" }
+              %li.post{id:post.columns.id+""}
+                #content= post.columns.content
+                %ul.meta
+                  %li Posted at 
+                    =post.columns.creation_date
+        :if{condition: this['users']}
+          %h2 Members
+          #friend_wall
+            :foreach{ array: users, value: "user" }
+                .friend_box
+                  %a{href: '/users/'+user.columns.username}
+                    %img{src: gravatar(user)}
+                  =user.columns.username

@@ -1,10 +1,14 @@
-:if{condition: 'profile' in this}
+:if{condition: this['profile']}
   .title
-    %a{href:"/users/"+profile.columns.username+"/groups"}
-      %h2= profile.columns.username
+    %a{href:"/users/"+profile.columns.username}
+      .header= profile.columns.fullname || profile.columns.username
+    :if{condition: profile.columns['signature']}
+      .subheader= profile.columns.signature
     :if{condition: !userpage}
       %ul
+        %li navigation:
         %li
           %a{href:"/users/"+profile.columns.username+"/groups"} Groups
         %li
           %a{href:"/users/"+profile.columns.username+"/friends"} Friends
+    %hr

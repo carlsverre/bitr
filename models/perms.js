@@ -90,6 +90,11 @@ exports.Perm = function (user_id, friend_id, group_id, perms) {
 
       return "("+perms_a.join(',')+")";
   }
+
+  this.remove = function () {
+    var sql = sprintf("DELETE FROM %s WHERE id=?", tname);
+    return DB.query(sql, this.columns.id);
+  }
   
 }
 

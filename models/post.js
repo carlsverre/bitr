@@ -2,7 +2,7 @@ var conf = require('../conf');
 
 var tname = conf.tables.posts;
 
-exports.Post = function (post_id, user, content, tags, private, media_type, filename) {
+exports.Post = function (post_id, user, content, tags, private, mediatype, filename) {
   var that = this;
 
   this.user = user;
@@ -29,7 +29,7 @@ exports.Post = function (post_id, user, content, tags, private, media_type, file
       tags:           tags,
       content:        content,
       private:        private,
-      media_type:     (media_type)?media_type:"text",
+      mediatype:     (mediatype)?mediatype:"text",
       filename:       filename
     }
 
@@ -63,6 +63,84 @@ exports.Post = function (post_id, user, content, tags, private, media_type, file
 }
 
 exports.Posts = {
+  get_friend_and_user_posts: function(user) {
+    var promise = new process.Promise();
+    var sql = sprintf("SELECT * FROM %s p WHERE (private=false AND user_id IN"+
+                      " (SELECT friend_id FROM %s f WHERE user_id = ?)) OR user_id = ? ORDER BY creation_date DESC", tname, conf.tables.friends);
+
+    DB.query(sql, [user.columns.id, user.columns.id])
+    .addCallback(function (rows) {
+      var posts = [];
+      var users = {};
+
+      function get_next_post(i) {
+        if(i >= rows.length) {
+          promise.emitSuccess(posts);
+          return;
+        }
+        var post = new Post(rows[i]);
+        var user_id = post.columns.user_id;
+        var user = users[user_id] || null;
+
+        if(!user) {
+          Users.get({id:user_id}).addCallback(function (data) {
+            var user = data[0];
+            users[user_id] = user;
+            post.user = user;
+            posts.push(post);
+            get_next_post(i+1);
+          });
+        } else {
+          post.user = user;
+          posts.push(post);
+          get_next_post(i+1);
+        }
+      }
+
+      get_next_post(0);
+    });
+
+    return promise;
+  },
+  get_posts_in_group: function(group) {
+    var promise = new process.Promise();
+    var sql = sprintf("SELECT * FROM %s p WHERE (private=false AND user_id IN"+
+                      " (SELECT user_id FROM %s WHERE group_id = ?)) ORDER BY creation_date DESC", tname, conf.tables.usergroup);
+
+    DB.query(sql, [group.columns.id])
+    .addCallback(function (rows) {
+      var posts = [];
+      var users = {};
+
+      function get_next_post(i) {
+        if(i >= rows.length) {
+          promise.emitSuccess(posts);
+          return;
+        }
+        var post = new Post(rows[i]);
+        var user_id = post.columns.user_id;
+        var user = users[user_id] || null;
+
+        if(!user) {
+          Users.get({id:user_id}).addCallback(function (data) {
+            var user = data[0];
+            users[user_id] = user;
+            post.user = user;
+            posts.push(post);
+            get_next_post(i+1);
+          });
+        } else {
+          post.user = user;
+          posts.push(post);
+          get_next_post(i+1);
+        }
+      }
+
+      get_next_post(0);
+    });
+
+    return promise;
+  },
   // gets all posts that match hash
   // ex. hash = {id:3}
   get: function (hash, perms) {

@@ -10,10 +10,11 @@ var controller = {
       o.user = user;
 
       if(user && (user.columns.username == username)) {
-        o.userpage = true;
-        user.get_posts().addCallback(function (posts) {
+        Posts.get_friend_and_user_posts(user)
+        .addCallback(function (posts) {
           o.posts = posts;
           o.profile = user;
+          o.userpage = true;
           render(req, "users", "index", o, function(html) {
             res.simpleHtml(200, html);
           });
@@ -61,6 +62,48 @@ var controller = {
     else {
       Users.get({id:req.session.data.user_id}).addCallback(function (data) {
         index_exec(data[0]);
+      });
+    }
+  },
+  groups: function (req, res, username) {
+    var o = {};
+    o.page_title = username + " | Groups";
+
+    var guest = !('user_id' in req.session.data);
+
+    var exec = function (user) {
+      o.user = user;
+      o.userpage = false;
+
+      if(!guest && user.columns.username == username) {
+        o.userpage = true;
+        o.profile = user;
+        user.get_groups().addCallback(function (groups) {
+          o.groups = groups;
+          render(req, "users", "groups", o, function(html) {
+            res.simpleHtml(200, html);
+          });
+        });
+        return;
+      }
+
+      Users.get({username:username}).addCallback(function (data) {
+        var profile = data[0];
+        o.profile = profile;
+
+        profile.get_groups().addCallback(function (groups) {
+          o.groups = groups;
+          render(req, "users", "groups", o, function(html) {
+            res.simpleHtml(200, html);
+          });
+        });
+      });
+    }
+
+    if(guest) exec(null);
+    else {
+      Users.get({id:req.session.data.user_id}).addCallback(function (data) {
+        exec(data[0]);
       });
     }
   },
@@ -134,14 +177,57 @@ var controller = {
     });
   },
   save_settings: function (req, res, post) {
-    res.redirect(req.headers.referer);
+    var died = false;
+    function die(msg, url) {
+      debug(msg);
+      if(!died) {
+        req.session.data.flash = "Error" + (msg)?msg:" ";
+        res.redirect(url || req.headers.referer);
+        died = true;
+      }
+    }
+
+    if(!post) {
+      die();
+      return;
+    }
+
+    // passwords
+    var password = post.password || "";
+    if(password != "") {
+      var check_password = post.password_confirm || die("Must confirm password!");
+      if(password != check_password) die("Password doesn't match!");
+    }
+
+    if(died) return;
+
+    if(!('user_id' in req.session.data)) {
+      die("Your not logged in...", "/auth");
+      return;
+    }
+
+    Users.get({id:req.session.data.user_id}).addCallback(function (data) {
+      var user = data[0];
+
+      if(password) user.set_password(password, req.connection.remoteAddress);
+
+      user.columns.fullname  = post.fullname   || user.columns.fullname;
+      user.columns.location  = post.location   || user.columns.location;
+      user.columns.email     = post.email      || user.columns.email;
+      user.columns.signature = post.signature  || user.columns.signature;
+      
+      user.save().addCallback(function () {
+      debug("saved");
+        res.redirect(req.headers.referer);
+      });
+    });
   }
 }
 
 exports.urls = ['^/users',
-  ['GET',       '/([^/]+)/?$',          controller.index          ],
-  ['GET',       '/([^/]+)/friends/?$',  controller.friends        ],
-  ['GET',       '/([^/]+)/groups/?$',   controller.index          ],
-  ['GET',       '/([^/]+)/settings/?$', controller.settings       ],
-  ['POST',      '/save_settings/?$',    controller.save_settings  ]
+  ['GET',       '/([^/]+)/?$',          controller.index                         ],
+  ['GET',       '/([^/]+)/friends/?$',  controller.friends                       ],
+  ['GET',       '/([^/]+)/groups/?$',   controller.groups                        ],
+  ['GET',       '/([^/]+)/settings/?$', controller.settings                      ],
+  ['POST',      '/save_settings/?$',    controller.save_settings,   "multipart"  ]
 ];

@@ -1,0 +1,29 @@
+!!! strict
+%html{ xmlns: "http://www.w3.org/1999/xhtml" }
+  %head
+    %title= page_title
+    = head_meta
+  %body.bp
+    .container
+      = header
+      #main-content.groupspage
+        = users_title
+        :if{condition: userpage}
+          :if{condition: 'flash' in this && flash != ''}
+            .note= flash
+          %form#groupform{ action: "/groups/create", method: "post", enctype: "multipart/form-data" }
+            .group
+              %label Group Name:
+              %input.item{ type: "text", name: "name" }
+            .group
+              %label Group Description
+              %textarea.item{ name: "description" }
+            %input#submit{ type: "submit", value: "Add" }
+        %ul#groups
+          :foreach{ array: groups, value: "group" }
+              %li.group
+                %a{href: '/groups/'+group.columns.name}
+                  =group.columns.name
+                :if{condition: userpage}
+                  %a{href: '/groups/'+group.columns.name+'/remove/'+user.columns.username, title: "delete"}
+                    [x]
