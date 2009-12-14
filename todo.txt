@@ -3,3 +3,4 @@ TODO:
   * home template -> search box
   * implement photos/videos
   * groups
+  * sessions seralize to sql
