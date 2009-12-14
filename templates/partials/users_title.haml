@@ -1,0 +1,10 @@
+:if{condition: 'profile' in this}
+  .title
+    %a{href:"/users/"+profile.columns.username+"/groups"}
+      %h2= profile.columns.username
+    :if{condition: !userpage}
+      %ul
+        %li
+          %a{href:"/users/"+profile.columns.username+"/groups"} Groups
+        %li
+          %a{href:"/users/"+profile.columns.username+"/friends"} Friends

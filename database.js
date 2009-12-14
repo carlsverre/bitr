@@ -104,11 +104,12 @@ exports.simple_update = function (tbl, set, where) {
   return c.query(sql);
 }
 
-exports.simple_select = function (tbl, columns, where) {
+exports.simple_select = function (tbl, columns, where, order_by) {
   var columns_str = (columns == null) ? "*" : columns.join(", ");
-  var where_str = exports.seralize_hash(where, " AND ");
+  var where_str = (where)?"WHERE "+exports.seralize_hash(where, " AND "):""
+  var order_by_str = (order_by == null) ? "" : "ORDER BY " + order_by;
   
-  var sql = sprintf("SELECT %s FROM %s WHERE %s;", columns_str, tbl, where_str);
+  var sql = sprintf("SELECT %s FROM %s %s %s;", columns_str, tbl, where_str, order_by_str);
 
   return c.query(sql);
 }

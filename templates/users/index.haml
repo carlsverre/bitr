@@ -7,22 +7,25 @@
     .container
       = header
       #main-content.userpage
-        %h2 Carl Sverre
+        = users_title
         :if{condition: userpage}
-          %form{ action: "/posts/create", method: "post", enctype: "multipart/form-data" }
-            %label Content:
-            %textarea{ name: "content", rows:"5", cols:"30" }
+          %form#postform{ action: "/posts/create", method: "post", enctype: "multipart/form-data" }
+            %h3 What's happening?
+            %textarea#content{ name: "content" }
             %br
-            %label Tags: 
-            %input{ type: "text", name: "tags" }
+            %input#tags{ type: "text", name: "tags", value: "Comma-delimited tags" }
             %br
             %label Private?
-            %input{ type: "checkbox", name: "private" }
-            %br
-            %input{ type: "submit", value: "Shout!" }
+            %input#private{ type: "checkbox", name: "private" }
+            %input#submit{ type: "submit", value: "Shout!" }
         %ol.posts
           :foreach{ array: posts, value: "post" }
-            %li{id:post.columns.id+""}= post.columns.content
-              .meta Posted at 
-                =post.columns.creation_date
-            %hr
+            %li.post{id:post.columns.id+""}
+              #content= post.columns.content
+              %ul.meta
+                %li Posted at 
+                  =post.columns.creation_date
+                :if{condition: userpage}
+                  %li Posted by 
+                    %a{href:"/users/"+post.user.columns.username}
+                      =post.user.columns.username

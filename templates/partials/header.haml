@@ -1,0 +1,19 @@
+#header
+  %h3 Bitr
+  %ul#navigation
+    %li
+      %a{href:"/"} Home
+    %li
+      %a{href:"/auth"} Login/Register
+  :if{condition: ('user' in this && user != null)}
+    %ul#user_nav
+      %li
+        %a{href:"/users/"+user.columns.username}= user.columns.username
+      %li
+        %a{href:"/users/"+user.columns.username+"/groups"} Groups
+      %li
+        %a{href:"/users/"+user.columns.username+"/friends"} Friends
+      %li
+        %a{href:"/users/"+user.columns.username+"/settings"} Settings
+      %li
+        %a{href:"/auth/logout"} Logout

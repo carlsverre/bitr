@@ -38,7 +38,7 @@ var controller = {
   register: function (req, res, post) {
     var username = post.username;
     var password = post.password;
-    var user = new User(username, password, null, req.connection.remoteAddress); 
+    var user = new User(username, password, '', req.connection.remoteAddress); 
     user.save().addCallback(function () {
       req.session.data.user_id = user.columns.id;
 

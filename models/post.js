@@ -2,8 +2,10 @@ var conf = require('../conf');
 
 var tname = conf.tables.posts;
 
-exports.Post = function (user_id, post_id, content, tags, private, media_type, filename) {
+exports.Post = function (post_id, user, content, tags, private, media_type, filename) {
   var that = this;
+
+  this.user = user;
 
   var from_row = function (row) {
     if (!('columns' in that)) that.columns = {};
@@ -14,20 +16,20 @@ exports.Post = function (user_id, post_id, content, tags, private, media_type, f
     }
   }
 
-  if(typeof(user_id) == 'object') {
+  if(typeof post_id == "object") {
     // passing in the query row
-    from_row(user_id);
+    from_row(post_id);
   } else {
     // go with the defaults
     this.columns = {
       id:             null,
-      user_id:        user_id,
+      user_id:        user.columns.id,
       response_to:    (post_id || null),
       creation_date:  null,
       tags:           tags,
       content:        content,
       private:        private,
-      media_type:     (media_type)?"text":media_type,
+      media_type:     (media_type)?media_type:"text",
       filename:       filename
     }
 
@@ -71,25 +73,46 @@ exports.Posts = {
       DB.pretty_print(rows);
 
       var posts = [];
+      var users = {};
 
-      for (var i in rows) {
-        var row = rows[i];
-        posts.push(new Post(row));
-      } 
+      function get_next_post(i) {
+        if(i >= rows.length) {
+          promise.emitSuccess(posts);
+          return;
+        }
+        var post = new Post(rows[i]);
+        var user_id = post.columns.user_id;
+        var user = users[user_id] || null;
 
-      promise.emitSuccess(posts);
+        if(!user) {
+          Users.get({id:user_id}).addCallback(function (data) {
+            var user = data[0];
+            users[user_id] = user;
+            post.user = user;
+            posts.push(post);
+            get_next_post(i+1);
+          });
+        } else {
+          post.user = user;
+          posts.push(post);
+          get_next_post(i+1);
+        }
+      }
+
+      get_next_post(0);
     };
 
     if(perms) {
-      var sql = "SELECT * FROM ? WHERE user_id=?" + 
-                "AND ( (private=false) OR (mediatype IN ("+perms+")) )";
+      var sql = sprintf("SELECT * FROM %s WHERE user_id=? " + 
+                "AND ( (private=false) OR (mediatype IN "+perms.to_sql_array()+") ) " +
+                "ORDER BY creation_date DESC", tname);
 
-      DB.query(sql, [tposts, hash.user_id]).addCallback(parse_posts)
+      DB.query(sql, [hash.user_id]).addCallback(parse_posts)
       .addErrback(function (err) {
         promise.emitError(err);
       });
     } else {
-      DB.simple_select(tname, null, hash).addCallback(parse_posts)
+      DB.simple_select(tname, null, hash, "creation_date DESC").addCallback(parse_posts)
       .addErrback(function (err) {
         promise.emitError(err);
       });

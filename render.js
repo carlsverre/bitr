@@ -49,8 +49,9 @@ var mem_cache = (function () {
   }
 })();
 
-// initialize partials
+// initialize partials and helpers
 var partials = {};
+var helpers = {};
 
 (function () {
   var partials_dir = conf.settings.partials_dir;
@@ -61,18 +62,26 @@ var partials = {};
       if(i >= list.length) return;
 
       var partial_src = list[i];
-      var partial = partial_src.replace('.html','');
+      var partial = partial_src.replace(/\..*$/,'');
+      if(partial == '') { get_next(i+1); return; }
       var partial_path = partials_dir + partial_src;
 
       posix.cat(partial_path)
-      .addCallback(function (html) {
-        partials[partial] = html;
+      .addCallback(function (text) {
+        partials[partial] = {html: /.*\.html$/.test(partial_src), text: text};
         get_next(i+1);
       });
     }
 
     get_next(0);
   });
+
+  var helpers_src = conf.helpers;
+
+  for(var j in helpers_src) {
+    var helper = helpers_src[j];
+    process.mixin(helpers, require(helper));
+  }
 })();
 
 exports.render = function (req, controller, view, context, callback) {
@@ -83,7 +92,14 @@ exports.render = function (req, controller, view, context, callback) {
 
   // mixin some magic
   process.mixin(context, req.template_params);
-  process.mixin(context, partials);
+  process.mixin(context, helpers);
+
+  // mixin partials
+  for(var key in partials) {
+    var partial = partials[key];
+    if(partial.html) context[key] = partial.text;
+    else context[key] = haml.render(context, partial.text);
+  }
 
   var path = 'templates/' + controller + '/' + view + '.haml';
 

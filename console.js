@@ -3,6 +3,7 @@ var cl  = require('./lib/consolelog/consolelog');
 var sys = require('sys');
 
 var levelmap = [cl.log, cl.info, cl.warn, cl.error];
+//var levelmap = [sys.puts, sys.puts, sys.debug, sys.debug];
 
 function mk_pf(pref) {
   return function () {

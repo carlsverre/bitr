@@ -59,12 +59,13 @@ body.bp caption { background: #eee; }
 body.bp .quiet { color: #666666; }
 body.bp .loud { color: #111111; }
 
+body.bp { background-color: #F3F5EA; }
 body.bp .box { padding: 1.5em; margin-bottom: 1.5em; background: #E5ECF9; }
 body.bp div.border { padding-right: 4px; margin-right: 5px; border-right: 1px solid #eeeeee; }
 body.bp div.colborder { padding-right: 20px; margin-right: 21px; border-right: 1px solid #eeeeee; }
 body.bp hr { background: #dddddd; color: #dddddd; clear: both; float: none; width: 100%; height: .1em; margin: 0 0 1.45em; border: none; }
 body.bp hr.space { background: #dddddd; color: #dddddd; clear: both; float: none; width: 100%; height: .1em; margin: 0 0 1.45em; border: none; background: #fff; color: #fff; }
-body.bp .container { width: 750px; margin: 0 auto; overflow: hidden; display: inline-block; }
+body.bp .container { padding-left: 31.667px; padding-right: 31.667px; background-color: #EEEEE2; height: 100%; width: 750px; margin: 0 auto; overflow: hidden; display: inline-block; }
 body.bp .container { display: block; }
 
 a { color: #0000cc; text-decoration: none; }
@@ -74,18 +75,76 @@ a:hover { color: #00cccc; }
 a:active { color: #cc00cc; }
 a:hover { text-decoration: underline; }
 
-body #header { display: inline; float: left; margin-right: 0; width: 750px; border-bottom: 1px solid #ccc; padding-bottom: 0.2em; }
+.note { background: #FFF6BF; border-top: 2px solid #FFD324; border-bottom: 2px solid #FFD324; text-align: center; margin: 10px auto; padding: 5px 20px; }
+
+body #header { display: inline; float: left; margin-right: 0; width: 750px; border-bottom: 1px solid #ccc; padding-bottom: 0.2em; margin-bottom: 0.5em; padding-top: 0.5em; }
 * html body #header { overflow-x: hidden; }
 body #header h3 { float: left; margin-right: 1em; margin-bottom: 0px; }
-body #header #navigation { margin: 0; padding: 0; border: 0; outline: 0; overflow: hidden; display: inline-block; }
-body #header #navigation { display: block; }
-body #header #navigation li { list-style-type: none; margin-left: 0px; white-space: nowrap; display: inline; float: left; padding-left: 4px; padding-right: 4px; }
-body #header #navigation li.first { padding-left: 0px; }
-body #header #navigation li.last { padding-right: 0px; }
-body #header #navigation a { font-size: 1.5em; line-height: 1; text-decoration: none; margin-right: 1em; }
-body #main-content.userpage { display: inline; float: left; margin-right: 0; width: 750px; }
-* html body #main-content.userpage { overflow-x: hidden; }
-body #main-content.userpage ol.posts li { display: inline; float: left; margin-right: 0; width: 686.667px; list-style-type: none; margin-left: 0px; margin-bottom: 0.2em; }
-* html body #main-content.userpage ol.posts li { overflow-x: hidden; }
-body #main-content.userpage ol.posts li .meta { font-size: 0.8em; }
-body #main-content.userpage ol.posts hr { background: #dddddd; color: #dddddd; clear: both; float: none; width: 100%; height: .1em; margin: 0 0 1.45em; border: none; }
+body #header ul { margin: 0; padding: 0; border: 0; outline: 0; overflow: hidden; display: inline-block; }
+body #header ul { display: block; }
+body #header ul li { list-style-type: none; margin-left: 0px; white-space: nowrap; display: inline; float: left; padding-left: 4px; padding-right: 4px; }
+body #header ul li.first { padding-left: 0px; }
+body #header ul li.last { padding-right: 0px; }
+body #header ul a { font-size: 1.5em; line-height: 1; text-decoration: none; text-transform: lowercase; }
+body #header ul a:after { content: " | "; }
+body #header #navigation { float: left; }
+body #header #user_nav { float: right; border-radius: 10px; -moz-border-radius: 10px; -webkit-border-radius: 10px; background-color: #FFF; padding: 3px; }
+body #main-content { display: inline; float: left; margin-right: 0; width: 750px; }
+* html body #main-content { overflow-x: hidden; }
+body #main-content .title { margin-bottom: 10px; }
+body #main-content .title h2 { text-decoration: none; font-size: 2.5em; margin-bottom: 4px; line-height: 0.5; margin-top: 4px; }
+body #main-content .title h2:hover { text-decoration: underline; }
+body #main-content .title ul { margin: 0; padding: 0; border: 0; outline: 0; overflow: hidden; display: inline-block; margin-left: 10px; }
+body #main-content .title ul { display: block; }
+body #main-content .title ul li { list-style-type: none; margin-left: 0px; white-space: nowrap; display: inline; float: left; padding-left: 4px; padding-right: 4px; }
+body #main-content .title ul li.first { padding-left: 0px; }
+body #main-content .title ul li.last { padding-right: 0px; }
+body #main-content .title ul li { list-style-type: none; margin-left: 0px; }
+body #main-content .title ul a { color: #3B809F; font-family: Verdana, sans-serif; font-size: 0.8em; text-decoration: none; text-transform: lowercase; }
+body #main-content .title ul a:hover { text-decoration: underline; }
+body #main-content form#postform { display: inline; float: left; margin-right: 0; width: 686.667px; margin-bottom: 1em; background-color: #cef; padding-right: 31.667px; padding-left: 31.667px; padding-top: 10px; padding-bottom: 10px; border-radius: 10px; -moz-border-radius: 10px; -webkit-border-radius: 10px; }
+* html body #main-content form#postform { overflow-x: hidden; }
+body #main-content form#postform h3 { margin-bottom: 5px; }
+body #main-content form#postform #content { display: inline; float: left; margin-right: 0; width: 686.667px; border: 1px solid #999; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.7) inset; margin-bottom: 3px; }
+* html body #main-content form#postform #content { overflow-x: hidden; }
+body #main-content form#postform #content:focus { -moz-box-shadow: 0 0 2px 1px #2878D4, 0 1px 2px rgba(0, 0, 0, 0.7) inset; }
+body #main-content form#postform #tags { display: inline; float: left; margin-right: 0; width: 686.667px; border: 1px solid #ccc; margin-bottom: 0.5em; -moz-box-shadow: 0 0px 0px rgba(0, 0, 0, 0.7) inset; color: #999; }
+* html body #main-content form#postform #tags { overflow-x: hidden; }
+body #main-content form#postform #tags:focus { color: #000; }
+body #main-content form#postform #submit { float: right; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; -moz-box-shadow: 0 1px rgba(255, 255, 255, 0.4), 0 20px 20px -10px white inset; background: #B4B4B4 url(chrome://global/skin/toolbar/white-transparent-gradient.png) repeat-x scroll 0 0; border: 1px solid rgba(0, 0, 0, 0.6); padding: 3px 6px; text-shadow: 0 1px rgba(255, 255, 255, 0.4); }
+body #main-content form#postform #submit:hover { -moz-box-shadow: 0 -5px 12px rgba(0, 0, 0, 0.4) inset, 0 1px 3px #000000 inset, 0 1px rgba(255, 255, 255, 0.4); background: #B5B5B5 none repeat scroll 0 0; cursor: pointer; }
+body #main-content.userpage ol.posts li.post { border-radius: 10px; -moz-border-radius: 10px; -webkit-border-radius: 10px; background-color: #FFF; display: inline; float: left; margin-right: 0; width: 686.667px; padding: 3px; list-style-type: none; margin-left: 0px; margin-bottom: 0.5em; }
+* html body #main-content.userpage ol.posts li.post { overflow-x: hidden; }
+body #main-content.userpage ol.posts li.post #content { font-size: 1.1em; font-family: "Lucida Grande","Lucida Sans Unicode","Lucida Sans",Helvetica,Arial,sans-serif; color: #735757; }
+body #main-content.userpage ol.posts li.post ul.meta { list-style-type: none; margin-left: 0px; color: #619BC7; font-family: Verdana, sans-serif; font-size: 0.7em; }
+body #main-content.friendpage form#friendform { display: inline; float: left; margin-right: 0; width: 686.667px; margin-bottom: 1em; background-color: #cef; padding-right: 31.667px; padding-left: 31.667px; padding-top: 10px; padding-bottom: 10px; border-radius: 10px; -moz-border-radius: 10px; -webkit-border-radius: 10px; }
+* html body #main-content.friendpage form#friendform { overflow-x: hidden; }
+body #main-content.friendpage form#friendform h3 { margin-bottom: 5px; }
+body #main-content.friendpage form#friendform #friend { display: inline; float: left; margin-right: 10px; width: 528.333px; border: 1px solid #999; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.7) inset; margin-bottom: 3px; padding: 3px; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
+* html body #main-content.friendpage form#friendform #friend { overflow-x: hidden; }
+body #main-content.friendpage form#friendform #friend:focus { -moz-box-shadow: 0 0 2px 1px #2878D4, 0 1px 2px rgba(0, 0, 0, 0.7) inset; }
+body #main-content.friendpage form#friendform #submit { display: inline; float: left; margin-right: 0; width: 116.667px; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; -moz-box-shadow: 0 1px rgba(255, 255, 255, 0.4), 0 20px 20px -10px white inset; background: #B4B4B4 url(chrome://global/skin/toolbar/white-transparent-gradient.png) repeat-x scroll 0 0; border: 1px solid rgba(0, 0, 0, 0.6); padding: 2px 5px; text-shadow: 0 1px rgba(255, 255, 255, 0.4); }
+* html body #main-content.friendpage form#friendform #submit { overflow-x: hidden; }
+body #main-content.friendpage form#friendform #submit:hover { -moz-box-shadow: 0 -5px 12px rgba(0, 0, 0, 0.4) inset, 0 1px 3px #000000 inset, 0 1px rgba(255, 255, 255, 0.4); background: #B5B5B5 none repeat scroll 0 0; cursor: pointer; }
+body #main-content.friendpage form#friendform #perm_group { display: inline; float: left; margin-right: 0; width: 306.667px; display: block; margin-top: 5px; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; padding: 3px; background: #B3DBEF; padding-bottom: 4px; }
+* html body #main-content.friendpage form#friendform #perm_group { overflow-x: hidden; }
+body #main-content.friendpage form#friendform #perm_group b { margin-right: 7px; }
+body #main-content.friendpage form#friendform #perm_group label { margin-right: 10px; padding: 3px; }
+body #main-content.friendpage #friend_wall { display: inline; float: left; margin-right: 0; width: 655px; }
+* html body #main-content.friendpage #friend_wall { overflow-x: hidden; }
+body #main-content.friendpage #friend_wall #friend_box { display: inline; float: left; margin-right: 10px; width: 85px; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.7) inset; padding: 2px; background-color: #E8EDF2; text-align: center; border: 1px solid #555; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
+* html body #main-content.friendpage #friend_wall #friend_box { overflow-x: hidden; }
+body #main-content.settingspage form#settingsform { display: inline; float: left; margin-right: 0; width: 686.667px; margin-bottom: 1em; background-color: #cef; padding-right: 31.667px; padding-left: 31.667px; padding-top: 10px; padding-bottom: 10px; border-radius: 10px; -moz-border-radius: 10px; -webkit-border-radius: 10px; }
+* html body #main-content.settingspage form#settingsform { overflow-x: hidden; }
+body #main-content.settingspage form#settingsform .group { display: inline; float: left; margin-right: 10px; width: 686.667px; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px dashed #ccc; }
+* html body #main-content.settingspage form#settingsform .group { overflow-x: hidden; }
+body #main-content.settingspage form#settingsform .group label { display: inline; float: left; margin-right: 10px; width: 243.333px; }
+* html body #main-content.settingspage form#settingsform .group label { overflow-x: hidden; }
+body #main-content.settingspage form#settingsform .group .item { display: inline; float: left; margin-right: 0; width: 401.667px; }
+* html body #main-content.settingspage form#settingsform .group .item { overflow-x: hidden; }
+body #main-content.settingspage form#settingsform .passwordgroup { display: inline; float: left; margin-right: 10px; width: 686.667px; margin-bottom: 10px; }
+* html body #main-content.settingspage form#settingsform .passwordgroup { overflow-x: hidden; }
+body #main-content.settingspage form#settingsform .passwordgroup label { display: inline; float: left; margin-right: 10px; width: 243.333px; }
+* html body #main-content.settingspage form#settingsform .passwordgroup label { overflow-x: hidden; }
+body #main-content.settingspage form#settingsform .passwordgroup input { display: inline; float: left; margin-right: 10px; width: 180px; }
+* html body #main-content.settingspage form#settingsform .passwordgroup input { overflow-x: hidden; }

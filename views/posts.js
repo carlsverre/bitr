@@ -15,7 +15,7 @@ var controller = {
     Users.get({id: userid}).addCallback(function (rows) {
       var user = rows[0];
 
-      var post = new Post(user.columns.id, response_to, content, tags, private);
+      var post = new Post(response_to, user, content, tags, private);
       post.save();
       res.redirect(req.headers.referer);
     });

@@ -1,0 +1,28 @@
+!!! strict
+%html{ xmlns: "http://www.w3.org/1999/xhtml" }
+  %head
+    %title= page_title
+    = head_meta
+  %body.bp
+    .container
+      = header
+      #main-content.settingspage
+        = users_title
+        %form#settingsform{ action: sprintf("/users/save_settings",user.columns.username), method: "post", enctype: "multipart/form-data" }
+          .group
+            %label Full Name: 
+            %input.item{ type: "text", name: "fullname", value: _(user.columns.fullname) }
+          .group
+            %label Location: 
+            %input.item{ type: "text", name: "location", value: _(user.columns.location) }
+          .group
+            %label E-mail: 
+            %input.item{ type: "text", name: "email", value: _(user.columns.email) }
+          .group
+            %label Description:
+            %textarea.item{ name: "signature", value: _(user.columns.signature) }
+          .passwordgroup
+            %label Change Password: (leave blank to ignore)
+            %input{ type: "password", name: "password" }
+            %input{ type: "password", name: "password_confirm" }
+          %input#submit{ type: "submit", value: "Save Changes" }

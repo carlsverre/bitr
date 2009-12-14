@@ -50,6 +50,7 @@ exports.User = function (username, password, email, ip) {
 
   this.auth = function (password) {
     if (this.columns.password == encode_password(password, this.columns.salt)) {
+      this.save();
       return true;
     }
     return false;
@@ -98,6 +99,23 @@ exports.User = function (username, password, email, ip) {
 
   this.get_permissions = function(friend_id) {
     return Perms.get_friends({user_id:this.columns.id, friend_id:friend_id});
+  }
+
+  this.get_friends = function() {
+    var promise = new process.Promise();
+    var sql = sprintf("SELECT * FROM %s WHERE id IN "+
+                      "(SELECT friend_id FROM friends WHERE user_id = ?)",tname);
+    DB.query(sql, [this.columns.id]).addCallback(function (rows) {
+      var users = [];
+
+      for(var i in rows) {
+        var row = rows[i];
+        users.push(new User(row));
+      }
+
+      promise.emitSuccess(users);
+    });
+    return promise;
   }
 }
 

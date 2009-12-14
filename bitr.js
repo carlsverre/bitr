@@ -1,3 +1,6 @@
+// get configuration
+process.mixin(GLOBAL, {conf:require('./conf')});
+
 // setup global helpers
 process.mixin(GLOBAL, require('./console'));    // this implements sys functions
 process.mixin(GLOBAL, require('./lib/sprintf'));
@@ -10,7 +13,6 @@ process.mixin(GLOBAL, require('./models/perms'));
 
 // node requires
 var requires = {
-  conf:       require('./conf'),
   server:     require('./lib/node-router/node-router'),
   sessions:   require('./lib/sessions/sessions'),
   DB:         require('./database')
@@ -22,6 +24,7 @@ server.map_urls(require('./views/views').urls);
 server.map_urls(require('./views/auth').urls);
 server.map_urls(require('./views/user').urls);
 server.map_urls(require('./views/posts').urls);
+server.map_urls(require('./views/friends').urls);
 
 // setup middleware
 var session_middleware = {

@@ -1,2 +1,5 @@
 TODO:
-	* finish program? :D
+  * css default form
+  * home template -> search box
+  * implement photos/videos
+  * groups

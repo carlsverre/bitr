@@ -27,27 +27,32 @@ exports.Perm = function (user_id, friend_id, group_id, perms) {
     this.columns = {
       id:             null,
       user_id:        user_id,
-      perms:          perms,
+      perms:          perms||'---',
       creation_date:  null
     }
 
-    if (friend_id) this.columns.friend_id = friend_id;
-    else if(group_id) this.columns.group_id = group_id;
+    if (friend_id) {
+      this.columns.friend_id = friend_id;
+      this.tname = tfriends;
+    } else if(group_id) {
+      this.columns.group_id = group_id;
+      this.tname = tusergroup;
+    }
   }
 
   this.save = function () {
     var promise = new process.Promise();
     if(that.columns.id != null) {
       // update
-      DB.simple_update(tname, set=that.columns, where={id: that.columns.id}).addCallback(function(results) { 
+      DB.simple_update(that.tname, set=that.columns, where={id: that.columns.id}).addCallback(function(results) { 
         puts("Updated Perms: " + that.columns.id);
         promise.emitSuccess();
       });
     } else {
-      DB.simple_insert(tname, that.columns, true).addCallback(function(results) {
+      DB.simple_insert(that.tname, that.columns, true).addCallback(function(results) {
         if('id' in results[0]) {
           that.columns['id'] = results[0].id;
-          puts("Created Perms: " + that.columns.id + " ["+that.columns.perms+"]");
+          info("Created Perms: " + that.columns.id + " ["+that.columns.perms+"]");
           promise.emitSuccess();
         }
       }).addErrback(function(err) {
@@ -77,13 +82,13 @@ exports.Perm = function (user_id, friend_id, group_id, perms) {
   this.set_photo  = function (on) { set_perm(PHOTO, on); }
   this.set_video  = function (on) { set_perm(VIDEO, on); }
 
-  this.toString = function () {
+  this.to_sql_array = function () {
       var perms_a = [];
-      if(perms.text) perms_a.push('text');
-      if(perms.photo) perms_a.push('photo');
-      if(perms.video) perms_a.push('video');
+      if(this.text) perms_a.push("'text'");
+      if(this.photo) perms_a.push("'photo'");
+      if(this.video) perms_a.push("'video'");
 
-      return perms_a.join(',');
+      return "("+perms_a.join(',')+")";
   }
   
 }

@@ -1,0 +1,32 @@
+!!! strict
+%html{ xmlns: "http://www.w3.org/1999/xhtml" }
+  %head
+    %title= page_title
+    = head_meta
+  %body.bp
+    .container
+      = header
+      #main-content.friendpage
+        = users_title
+        :if{condition: userpage}
+          :if{condition: 'flash' in this && flash != ''}
+            .note= flash
+          %form#friendform{ action: "/friends/add", method: "post", enctype: "multipart/form-data" }
+            %input#friend{ type: "text", name: "friend", value: "Friends username" }
+            %input#submit{ type: "submit", value: "Add" }
+            #perm_group
+              %b Permissions: 
+              %label text
+                %input{ type: "checkbox", name: "text", checked: "yes" }
+              %label photos
+                %input{ type: "checkbox", name: "photo", checked: "yes" }
+              %label videos
+                %input{ type: "checkbox", name: "video", checked: "yes" }
+        #friend_wall
+          :foreach{ array: friends, value: "friend" }
+              #friend_box
+                %a{href: '/users/'+friend.columns.username}
+                  %img{src: gravatar(friend)}
+                =friend.columns.username
+                %a{href: '/friends/delete/'+friend.columns.id, title: "delete"}
+                  [x]
