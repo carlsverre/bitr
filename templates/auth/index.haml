@@ -6,19 +6,18 @@
   %body.bp
     .container
       = header
-      #main-content.userpage
+      #main-content.loginpage
         :if{ condition:this['flash'] }
           #flash= flash
-        %form{ action: "/auth/login", method: "post", enctype:"multipart/form-data" }
-          %label Username:
-          %input{ type:"text", name:"username" }
-          %br
-          %label Password:
-          %input{ type:"password", name:"password" }
-          %br
+        %form#loginform{ action: "/auth/login", method: "post", enctype:"multipart/form-data" }
+          .group
+            %label Username:
+            %input.item{ type:"text", name:"username" }
+          .group
+            %label Password:
+            %input.item{ type:"password", name:"password" }
           %label Are you new here?
-          %input{ type:"checkbox", name:"register" }
-          %br
-          %input{ type:"submit", value:"submit" }
+          %input.item{ type:"checkbox", name:"register" }
+          %input#submit{ type:"submit", value:"submit" }
 
 
