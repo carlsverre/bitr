@@ -1,10 +1,5 @@
 TODO:
   * home template -> search box
   * implement photos/videos
-  * users
-    ** fix up querying sql to use permissions
-  * groups
-    **models/groups add_user/remove_user
-    ** fix up querying sql to use permissions
   * sessions seralize to sql
   * live updating

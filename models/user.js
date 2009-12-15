@@ -152,7 +152,7 @@ exports.Users = {
   },
   get_users_in_group: function (group) {
     var promise = new process.Promise();
-    var sql = sprintf("SELECT * FROM %s p WHERE id IN"+
+    var sql = sprintf("SELECT * FROM %s WHERE id IN"+
                       " (SELECT user_id FROM %s WHERE group_id = ?) ORDER BY creation_date DESC", tname, conf.tables.usergroup);
 
     DB.query(sql, [group.columns.id])

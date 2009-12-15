@@ -24,6 +24,9 @@
               %li.group
                 %a{href: '/groups/'+group.columns.name}
                   =group.columns.name
-                :if{condition: userpage}
-                  %a{href: '/groups/'+group.columns.name+'/remove/'+user.columns.username, title: "delete"}
-                    [x]
+                :if{condition: userpage && group.columns.owner == user.columns.id}
+                  %a{href: sprintf('/groups/remove/%s', group.columns.name), title: "delete group"}
+                    [delete]
+                :if{condition: userpage && group.columns.owner != user.columns.id}
+                  %a{href: sprintf('/groups/%s/del/%s', group.columns.name, user.columns.username), title: "leave group"}
+                    [leave]

@@ -33,7 +33,7 @@ CREATE TABLE posts (
     tags            TEXT,
     content         VARCHAR(200),
     private         BOOLEAN,
-    mediatype       VARCHAR(5) CHECK(mediatype in ('text', 'photo', 'video')),
+    mediatype       VARCHAR(3) CHECK(mediatype in ('r--', '-r-', '--r')),
     filename        VARCHAR(256)
 );
 

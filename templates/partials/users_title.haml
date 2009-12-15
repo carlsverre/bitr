@@ -6,7 +6,7 @@
       .subheader= profile.columns.signature
     :if{condition: !userpage}
       %ul
-        %li navigation:
+        %li=profile.columns.username + ":"
         %li
           %a{href:"/users/"+profile.columns.username+"/groups"} Groups
         %li

@@ -10,12 +10,12 @@ var TEXT=0, PHOTO=1, VIDEO=2;
 
 exports.Perm = function (user_id, friend_id, group_id, perms) {
   this.columns = {};
-  var that = this;
+  var self = this;
 
   var from_row = function (row) {
     for (column in row) {
       var val = row[column];
-      that.columns[column] = val;
+      self.columns[column] = val;
     }
   }
 
@@ -33,26 +33,26 @@ exports.Perm = function (user_id, friend_id, group_id, perms) {
 
     if (friend_id) {
       this.columns.friend_id = friend_id;
-      this.tname = tfriends;
     } else if(group_id) {
       this.columns.group_id = group_id;
-      this.tname = tusergroup;
     }
   }
 
+  this.tname = (this.columns['group_id'])?tusergroup:tfriends;
+
   this.save = function () {
     var promise = new process.Promise();
-    if(that.columns.id != null) {
+    if(self.columns.id != null) {
       // update
-      DB.simple_update(that.tname, set=that.columns, where={id: that.columns.id}).addCallback(function(results) { 
-        puts("Updated Perms: " + that.columns.id);
+      DB.simple_update(self.tname, set=self.columns, where={id: self.columns.id}).addCallback(function(results) { 
+        puts("Updated Perms: " + self.columns.id);
         promise.emitSuccess();
       });
     } else {
-      DB.simple_insert(that.tname, that.columns, true).addCallback(function(results) {
+      DB.simple_insert(self.tname, self.columns, true).addCallback(function(results) {
         if('id' in results[0]) {
-          that.columns['id'] = results[0].id;
-          info("Created Perms: " + that.columns.id + " ["+that.columns.perms+"]");
+          self.columns['id'] = results[0].id;
+          info("Created Perms: " + self.columns.id + " ["+self.columns.perms+"]");
           promise.emitSuccess();
         }
       }).addErrback(function(err) {
@@ -65,7 +65,7 @@ exports.Perm = function (user_id, friend_id, group_id, perms) {
   }
 
   var has_perm = function (num) {
-    return (that.columns.perms.charAt(num) == has_char);
+    return (self.columns.perms.charAt(num) == has_char);
   }
 
   this.text   = function () { return has_perm(TEXT); }
@@ -73,9 +73,9 @@ exports.Perm = function (user_id, friend_id, group_id, perms) {
   this.video  = function () { return has_perm(VIDEO); }
 
   var set_perm = function (num, on) {
-    var perms = that.columns.perms.split('');
+    var perms = self.columns.perms.split('');
     perms[num] = (on)?has_char:not_char;
-    that.columns.perms = perms.join('');
+    self.columns.perms = perms.join('');
   }
 
   this.set_text   = function (on) { set_perm(TEXT, on); }
@@ -84,16 +84,16 @@ exports.Perm = function (user_id, friend_id, group_id, perms) {
 
   this.to_sql_array = function () {
       var perms_a = [];
-      if(this.text) perms_a.push("'text'");
-      if(this.photo) perms_a.push("'photo'");
-      if(this.video) perms_a.push("'video'");
+      if(this.text) perms_a.push("'r--'");
+      if(this.photo) perms_a.push("'-r-'");
+      if(this.video) perms_a.push("'--r'");
 
       return "("+perms_a.join(',')+")";
   }
 
   this.remove = function () {
-    var sql = sprintf("DELETE FROM %s WHERE id=?", tname);
-    return DB.query(sql, this.columns.id);
+    var sql = sprintf("DELETE FROM %s WHERE id=?", this.tname);
+    return DB.query(sql, [this.columns.id]);
   }
   
 }

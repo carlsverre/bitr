@@ -85,6 +85,8 @@ var helpers = {};
 })();
 
 exports.render = function (req, controller, view, context, callback) {
+  info("Rendering",controller,view);
+
   if(req == null) {
     debug("ERROR: Render must be called like so: render.call(null, args...)");
     return;

@@ -29,10 +29,19 @@ exports.Post = function (post_id, user, content, tags, private, mediatype, filen
       tags:           tags,
       content:        content,
       private:        private,
-      mediatype:     (mediatype)?mediatype:"text",
+      mediatype:     (mediatype)?mediatype:"r--",
       filename:       filename
     }
 
+  }
+
+  this.mediatype = function () {
+    var chars = mediatype.split('');
+    var types = ['text','image','video'];
+    for(var i in chars) {
+      if(chars[i] == 'r') return types[i];
+    }
+    return "unknown";
   }
 
   this.save = function () {
@@ -65,10 +74,14 @@ exports.Post = function (post_id, user, content, tags, private, mediatype, filen
 exports.Posts = {
   get_friend_and_user_posts: function(user) {
     var promise = new process.Promise();
-    var sql = sprintf("SELECT * FROM %s p WHERE (private=false AND user_id IN"+
-                      " (SELECT friend_id FROM %s f WHERE user_id = ?)) OR user_id = ? ORDER BY creation_date DESC", tname, conf.tables.friends);
 
-    DB.query(sql, [user.columns.id, user.columns.id])
+    // this is one ugly query... and its horribly written...  ouch...
+    var sql = sprintf("SELECT * FROM %s p WHERE (private=false AND user_id IN"+
+    " (SELECT friend_id FROM %s WHERE user_id = ?)) OR user_id = ? OR"+
+    " (private = true and (select perms from %s f where friend_id=p.user_id and f.user_id=?) like replace(mediatype, '-','_'))"+
+    " ORDER BY creation_date DESC", tname, conf.tables.friends, conf.tables.friends);
+
+    DB.query(sql, [user.columns.id, user.columns.id, user.columns.id])
     .addCallback(function (rows) {
       var posts = [];
       var users = {};
@@ -104,8 +117,10 @@ exports.Posts = {
   },
   get_posts_in_group: function(group) {
     var promise = new process.Promise();
-    var sql = sprintf("SELECT * FROM %s p WHERE (private=false AND user_id IN"+
-                      " (SELECT user_id FROM %s WHERE group_id = ?)) ORDER BY creation_date DESC", tname, conf.tables.usergroup);
+    var sql = sprintf("SELECT * FROM %s p WHERE"+
+    " (p.private=false AND (SELECT perms FROM %s utg WHERE utg.user_id=p.user_id and utg.group_id=?) like replace(p.mediatype,'-','_'))"+
+    " ORDER BY creation_date DESC", tname, conf.tables.usergroup);
+
 
     DB.query(sql, [group.columns.id])
     .addCallback(function (rows) {

@@ -94,14 +94,14 @@ body #main-content { display: inline; float: left; margin-right: 0; width: 750px
 body #main-content .title .header { text-decoration: none; font-size: 2.5em; margin-bottom: 6px; line-height: 0.5; margin-top: 4px; text-transform: capitalize; }
 body #main-content .title .header:hover { text-decoration: underline; }
 body #main-content .title .subheader { font-family: Gill Sans, Verdana; font-size: 0.8em; line-height: 14px; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; text-indent: 10px; color: #004ACC; }
-body #main-content .title ul { display: inline; float: left; margin-right: 10px; width: 180px; padding: 3px; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px; border: 1px solid #CFCFB5; background-color: #fff; margin: 0; padding: 0; border: 0; outline: 0; overflow: hidden; display: inline-block; }
+body #main-content .title ul { display: inline; float: left; margin-right: 10px; width: 211.667px; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px; margin: 0; padding: 0; border: 0; outline: 0; overflow: hidden; display: inline-block; margin-top: 10px; background-color: #fff; border: 1px solid #BFD8FF; }
 * html body #main-content .title ul { overflow-x: hidden; }
 body #main-content .title ul { display: block; }
 body #main-content .title ul li { list-style-type: none; margin-left: 0px; white-space: nowrap; display: inline; float: left; padding-left: 4px; padding-right: 4px; }
 body #main-content .title ul li.first { padding-left: 0px; }
 body #main-content .title ul li.last { padding-right: 0px; }
 body #main-content .title ul li { list-style-type: none; margin-left: 0px; }
-body #main-content .title ul li { color: #3B809F; font-family: Verdana, sans-serif; font-size: 0.8em; text-transform: lowercase; }
+body #main-content .title ul li { padding: 5px; color: #3B809F; font-family: Verdana, sans-serif; font-size: 0.8em; text-transform: lowercase; }
 body #main-content .title ul li a { text-decoration: none; }
 body #main-content .title ul li a:hover { text-decoration: underline; }
 body #main-content .title hr { background: none; border: none; margin-bottom: 1.45em; }
@@ -116,6 +116,15 @@ body #main-content form .group .item { display: inline; float: left; margin-righ
 * html body #main-content form .group .item { overflow-x: hidden; }
 body #main-content form #submit { border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; -moz-box-shadow: 0 1px rgba(255, 255, 255, 0.4), 0 20px 20px -10px white inset; background: #B4B4B4 url(chrome://global/skin/toolbar/white-transparent-gradient.png) repeat-x scroll 0 0; border: 1px solid rgba(0, 0, 0, 0.6); padding: 3px 6px; text-shadow: 0 1px rgba(255, 255, 255, 0.4); }
 body #main-content form #submit:hover { -moz-box-shadow: 0 -5px 12px rgba(0, 0, 0, 0.4) inset, 0 1px 3px #000000 inset, 0 1px rgba(255, 255, 255, 0.4); background: #B5B5B5 none repeat scroll 0 0; cursor: pointer; }
+body #main-content form#friendform #friend { display: inline; float: left; margin-right: 10px; width: 528.333px; border: 1px solid #999; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.7) inset; margin-bottom: 3px; padding: 3px; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
+* html body #main-content form#friendform #friend { overflow-x: hidden; }
+body #main-content form#friendform #friend:focus { -moz-box-shadow: 0 0 2px 1px #2878D4, 0 1px 2px rgba(0, 0, 0, 0.7) inset; }
+body #main-content form#friendform #submit { display: inline; float: left; margin-right: 0; width: 116.667px; padding: 2px 5px; }
+* html body #main-content form#friendform #submit { overflow-x: hidden; }
+body #main-content form#friendform #perm_group { display: inline; float: left; margin-right: 0; width: 306.667px; display: block; margin-top: 5px; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; padding: 3px; background: #B3DBEF; padding-bottom: 4px; }
+* html body #main-content form#friendform #perm_group { overflow-x: hidden; }
+body #main-content form#friendform #perm_group b { margin-right: 7px; }
+body #main-content form#friendform #perm_group label { margin-right: 10px; padding: 3px; }
 body #main-content #friend_wall { display: inline; float: left; margin-right: 0; width: 655px; }
 * html body #main-content #friend_wall { overflow-x: hidden; }
 body #main-content #friend_wall .friend_box { display: inline; float: left; margin-right: 10px; width: 85px; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.7) inset; padding: 2px; background-color: #E8EDF2; text-align: center; border: 1px solid #555; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
@@ -133,15 +142,6 @@ body #main-content.userpage form#postform #tags { display: inline; float: left; 
 * html body #main-content.userpage form#postform #tags { overflow-x: hidden; }
 body #main-content.userpage form#postform #tags:focus { color: #000; }
 body #main-content.userpage form#postform #submit { float: right; }
-body #main-content.friendpage form#friendform #friend { display: inline; float: left; margin-right: 10px; width: 528.333px; border: 1px solid #999; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.7) inset; margin-bottom: 3px; padding: 3px; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
-* html body #main-content.friendpage form#friendform #friend { overflow-x: hidden; }
-body #main-content.friendpage form#friendform #friend:focus { -moz-box-shadow: 0 0 2px 1px #2878D4, 0 1px 2px rgba(0, 0, 0, 0.7) inset; }
-body #main-content.friendpage form#friendform #submit { display: inline; float: left; margin-right: 0; width: 116.667px; padding: 2px 5px; }
-* html body #main-content.friendpage form#friendform #submit { overflow-x: hidden; }
-body #main-content.friendpage form#friendform #perm_group { display: inline; float: left; margin-right: 0; width: 306.667px; display: block; margin-top: 5px; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; padding: 3px; background: #B3DBEF; padding-bottom: 4px; }
-* html body #main-content.friendpage form#friendform #perm_group { overflow-x: hidden; }
-body #main-content.friendpage form#friendform #perm_group b { margin-right: 7px; }
-body #main-content.friendpage form#friendform #perm_group label { margin-right: 10px; padding: 3px; }
 body #main-content.settingspage form#settingsform .passwordgroup { display: inline; float: left; margin-right: 10px; width: 686.667px; margin-bottom: 10px; }
 * html body #main-content.settingspage form#settingsform .passwordgroup { overflow-x: hidden; }
 body #main-content.settingspage form#settingsform .passwordgroup label { display: inline; float: left; margin-right: 10px; width: 243.333px; }

@@ -8,12 +8,26 @@
       = header
       #main-content.groupspage
         = groups_title
+        :if{condition: this['owner'] && owner}
+          :if{condition: 'flash' in this && flash != ''}
+            .note= flash
+          %form#friendform{ action: sprintf("/groups/%s/add",group.columns.name), method: "post", enctype: "multipart/form-data" }
+            %input#friend{ type: "text", name: "friend", value: "Friends username" }
+            %input#submit{ type: "submit", value: "Add" }
+            #perm_group
+              %b Permissions: 
+              %label text
+                %input{ type: "checkbox", name: "text", checked: "yes" }
+              %label photos
+                %input{ type: "checkbox", name: "photo", checked: "yes" }
+              %label videos
+                %input{ type: "checkbox", name: "video", checked: "yes" }
         :if{condition: this['groups']}
           %ul#groups
             :foreach{ array: groups, value: "group" }
-                %li.group
-                  %a{href: '/groups/'+group.columns.name}
-                    =group.columns.name
+              %li.group
+                %a{href: '/groups/'+group.columns.name}
+                  =group.columns.name
         :if{condition: this['posts']}
           %h2 Posts
           %ol.posts
@@ -23,11 +37,17 @@
                 %ul.meta
                   %li Posted at 
                     =post.columns.creation_date
+                  %li Posted by 
+                    %a{href:"/users/"+post.user.columns.username}
+                      =post.user.columns.username
         :if{condition: this['users']}
           %h2 Members
           #friend_wall
-            :foreach{ array: users, value: "user" }
+            :foreach{ array: users, value: "friend" }
                 .friend_box
-                  %a{href: '/users/'+user.columns.username}
-                    %img{src: gravatar(user)}
-                  =user.columns.username
+                  %a{href: '/friends/'+friend.columns.username}
+                    %img{src: gravatar(friend)}
+                  =friend.columns.username
+                  :if{condition: this['owner'] && friend.columns.id != group.columns.owner }
+                    %a{href: sprintf('/groups/%s/del/%s',group.columns.name,friend.columns.username), title: "delete"}
+                      [x]
