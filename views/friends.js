@@ -8,7 +8,7 @@ var controller = {
       died = true;
     }
 
-    var friend_username = post.friend || die(2);
+    var friend_username = post.friend || die();
     var text_perm       = (post.text=='on');
     var photo_perm      = (post.photo=='on');
     var video_perm      = (post.video=='on');

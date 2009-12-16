@@ -6,3 +6,23 @@
   %body.bp
     .container
       = header
+      #main-content.homepage
+        :if{condition: 'flash' in this && flash != ''}
+          .note= flash
+        %form#searchform{ action: "#", method: "post", enctype: "multipart/form-data" }
+          %input#search{ type: "text", name: "query", value: this['query'] || '' }
+          %input#submit{ type: "submit", value: "Search" }
+        :if{condition: !this['query']}
+          #about=home_text
+        :if{condition: this['posts']}
+          %ol.posts
+            :foreach{ array: posts, value: "post" }
+              %li.post{id:post.columns.id+""}
+                #content= post.columns.content
+                %ul.meta
+                  %li Posted at 
+                    =post.columns.creation_date
+                  :if{condition: userpage}
+                    %li Posted by 
+                      %a{href:"/users/"+post.user.columns.username}
+                        =(post.user.columns.username==user.columns.username)?"you":post.user.columns.username

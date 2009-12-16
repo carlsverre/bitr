@@ -1,4 +1,11 @@
-TODO:
-  * home template -> search box
+BITR TODO:
+  * implement Posts.search(query)
   * implement photos/videos
   * live updating
+  * post view (show all the parents and children of a post)
+  * reply to post
+
+PROJECT TODO:
+  * E/R Diagram
+  * SQL queries for extracting list of info (see project spec)
+  * Package above two and sql/database.sql + submit
