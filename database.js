@@ -3,7 +3,7 @@ var pg_parsers  = require('./lib/postgres-js/lib/parsers');
 var pg_OIDS     = require('./lib/postgres-js/lib/type-oids');
 conf = require('./conf');
 
-postgres.DEBUG = 1;
+postgres.DEBUG = 0;
 
 var c = new postgres.Connection(conf.dbinfo.dbname,
                                 conf.dbinfo.user,

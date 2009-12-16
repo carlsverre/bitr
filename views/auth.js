@@ -1,6 +1,6 @@
 var controller = {
   index: function (req, res) {
-    if ('user_id' in req.session.data) {
+    if (req.session.data['user_id']) {
       Users.get({id:req.session.data.user_id}).addCallback(function (rows) {
         var user = rows[0];
         res.redirect("/users/" + user.columns.username);
@@ -46,7 +46,7 @@ var controller = {
     });
   },
   logout: function (req, res) {
-    if(!('user_id' in req.session.data)) {
+    if(!(req.session.data['user_id'])) {
       req.session.data.flash = "Your not logged in!";
       res.redirect("/auth");
       return;

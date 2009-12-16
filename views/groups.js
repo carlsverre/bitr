@@ -3,7 +3,7 @@ var controller = {
     var o = {
       page_title: "Groups"
     }
-    var guest = !('user_id' in req.session.data);
+    var guest = !(req.session.data['user_id']);
 
     function exec(user) {
       o.user = user;
@@ -27,7 +27,7 @@ var controller = {
     var o = {
       page_title: "Groups | " + groupname
     }
-    var guest = !('user_id' in req.session.data);
+    var guest = !(req.session.data['user_id']);
 
     function exec(user) {
       o.user = user;

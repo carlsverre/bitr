@@ -3,7 +3,7 @@ var controller = {
     var o = {};
     o.page_title = username + " | Home";
 
-    var guest = !('user_id' in req.session.data);
+    var guest = !(req.session.data['user_id']);
 
     var index_exec = function (user) {
       o.userpage = false;
@@ -69,7 +69,7 @@ var controller = {
     var o = {};
     o.page_title = username + " | Groups";
 
-    var guest = !('user_id' in req.session.data);
+    var guest = !(req.session.data['user_id']);
 
     var exec = function (user) {
       o.user = user;
@@ -111,7 +111,7 @@ var controller = {
     var o = {};
     o.page_title = username + " | Friends";
 
-    var guest = !('user_id' in req.session.data);
+    var guest = !(req.session.data['user_id']);
 
     var friends_exec = function (user) {
       o.user = user;
@@ -154,7 +154,7 @@ var controller = {
     o.page_title = username + " | Settings";
     o.userpage = true;
 
-    if(!('user_id' in req.session.data)) {
+    if(!(req.session.data['user_id'])) {
       req.session.data.flash = "Your not logged in...";
       res.redirect("/auth");
       return;
@@ -201,7 +201,7 @@ var controller = {
 
     if(died) return;
 
-    if(!('user_id' in req.session.data)) {
+    if(!(req.session.data['user_id'])) {
       die("Your not logged in...", "/auth");
       return;
     }

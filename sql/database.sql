@@ -37,6 +37,11 @@ CREATE TABLE posts (
     filename        VARCHAR(256)
 );
 
+CREATE TABLE sessions (
+    session_id      VARCHAR(16),
+    session         TEXT
+);
+
 -- RELATIONS
 
 -- references users.id groups.id

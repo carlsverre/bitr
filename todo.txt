@@ -1,5 +1,4 @@
 TODO:
   * home template -> search box
   * implement photos/videos
-  * sessions seralize to sql
   * live updating

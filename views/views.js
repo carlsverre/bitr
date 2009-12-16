@@ -19,13 +19,9 @@ var controller = {
       });
     });
 
-  },
-  static: function (req, res, file) {
-    server.staticHandler(req, res, conf.settings.static + file);
   }
 }
 
 exports.urls = ['^/',
-  ['GET',       '$',    controller.index],
-  ['GET',       'static/(.+)$',    controller.static],
+  ['GET',       '$',    controller.index]
 ];
