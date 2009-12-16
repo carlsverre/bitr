@@ -34,8 +34,24 @@ CREATE TABLE posts (
     content         VARCHAR(200),
     private         BOOLEAN,
     mediatype       VARCHAR(3) CHECK(mediatype in ('r--', '-r-', '--r')),
-    filename        VARCHAR(256)
+    filename        VARCHAR(256),
+    index_col       tsvector
 );
+
+-- SEARCH INDEX FOR POSTS (and trigger)
+CREATE INDEX posts_idx ON posts USING gin(index_col);
+CREATE FUNCTION posts_trigger() RETURNS trigger AS $$
+begin
+  new.index_col :=
+    setweight(to_tsvector('pg_catalog.english', coalesce(new.tags,'')),     'A') ||
+    setweight(to_tsvector('pg_catalog.english', coalesce(new.content,'')),  'B') ||
+    setweight(to_tsvector('pg_catalog.english', coalesce(new.filename,'')), 'C');
+  return new;
+end
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER posts_index_col_update BEFORE INSERT OR UPDATE
+ON posts FOR EACH ROW EXECUTE PROCEDURE posts_trigger();
 
 CREATE TABLE sessions (
     session_id      VARCHAR(16),

@@ -1,9 +1,9 @@
 BITR TODO:
-  * implement Posts.search(query)
+  * implement users page (list users)
   * implement photos/videos
-  * live updating
   * post view (show all the parents and children of a post)
   * reply to post
+  * live updating
 
 PROJECT TODO:
   * E/R Diagram

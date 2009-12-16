@@ -44,16 +44,13 @@ var controller = {
       o.user = user;
       o.posts = [];
       o.query = query;
-      render(req, 'views', 'index', o, function (html) {
-        res.simpleHtml(200, html);
-      });
-      /*Posts.search(query).addCallback(function (posts) {
+      Posts.search(query).addCallback(function (posts) {
         o.posts = posts;
         o.query = query;
         render(req, 'views', 'index', o, function (html) {
           res.simpleHtml(200, html);
         });
-      });*/
+      });
     }
 
     if(guest) exec(null);
