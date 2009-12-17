@@ -67,27 +67,28 @@ body.bp hr { background: #dddddd; color: #dddddd; clear: both; float: none; widt
 body.bp hr.space { background: #dddddd; color: #dddddd; clear: both; float: none; width: 100%; height: .1em; margin: 0 0 1.45em; border: none; background: #fff; color: #fff; }
 body.bp .container { padding-left: 31.667px; padding-right: 31.667px; background-color: #EEEEE2; height: 100%; width: 750px; margin: 0 auto; overflow: hidden; display: inline-block; }
 body.bp .container { display: block; }
+body.bp a { text-decoration: none; }
+body.bp a:hover { text-decoration: underline; }
 
-a { color: #0000cc; text-decoration: none; }
+a { color: #0000cc; }
 a:visited { color: #cccccc; }
 a:focus { color: #cccc00; }
 a:hover { color: #00cccc; }
 a:active { color: #cc00cc; }
-a:hover { text-decoration: underline; }
 
 .note, #flash { background: #FFF6BF; border-top: 2px solid #FFD324; border-bottom: 2px solid #FFD324; text-align: center; margin: 10px auto; padding: 5px 20px; }
 
 body #header { display: inline; float: left; margin-right: 0; width: 750px; border-bottom: 1px solid #ccc; padding-bottom: 0.2em; margin-bottom: 0.5em; padding-top: 0.5em; }
 * html body #header { overflow-x: hidden; }
-body #header h3 { float: left; margin-right: 1em; margin-bottom: 0px; }
+body #header h3 { float: left; margin-right: 1em; margin-bottom: 0px; font-size: 2em; }
 body #header ul { margin: 0; padding: 0; border: 0; outline: 0; overflow: hidden; display: inline-block; }
 body #header ul { display: block; }
 body #header ul li { list-style-type: none; margin-left: 0px; white-space: nowrap; display: inline; float: left; padding-left: 4px; padding-right: 4px; }
 body #header ul li.first { padding-left: 0px; }
 body #header ul li.last { padding-right: 0px; }
-body #header ul a { font-size: 1.5em; line-height: 1; text-decoration: none; text-transform: lowercase; }
+body #header ul a { font-size: 1.7em; line-height: 1; text-transform: lowercase; }
 body #header ul a:after { content: " | "; }
-body #header #navigation { float: left; }
+body #header #navigation { float: left; padding-top: 2px; }
 body #header #user_nav { float: right; border-radius: 10px; -moz-border-radius: 10px; -webkit-border-radius: 10px; background-color: #FFF; padding: 3px; }
 body #main-content { display: inline; float: left; margin-right: 0; width: 750px; }
 * html body #main-content { overflow-x: hidden; }
@@ -108,6 +109,8 @@ body #main-content .title hr { background: none; border: none; margin-bottom: 1.
 body #main-content form { display: inline; float: left; margin-right: 0; width: 686.667px; margin-bottom: 1em; background-color: #cef; padding-right: 31.667px; padding-left: 31.667px; padding-top: 10px; padding-bottom: 10px; border-radius: 10px; -moz-border-radius: 10px; -webkit-border-radius: 10px; }
 * html body #main-content form { overflow-x: hidden; }
 body #main-content form h3 { margin-bottom: 5px; }
+body #main-content form h3 a { text-decoration: none; }
+body #main-content form h3 a:hover { text-decoration: underline; }
 body #main-content form .group { display: inline; float: left; margin-right: 10px; width: 686.667px; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px dashed #ccc; }
 * html body #main-content form .group { overflow-x: hidden; }
 body #main-content form .group label { display: inline; float: left; margin-right: 10px; width: 243.333px; }
@@ -143,6 +146,8 @@ body #main-content.homepage form#searchform #search { display: inline; float: le
 body #main-content.homepage form#searchform #search:focus { -moz-box-shadow: 0 0 2px 1px #2878D4, 0 1px 2px rgba(0, 0, 0, 0.7) inset; }
 body #main-content.homepage form#searchform #submit { display: inline; float: left; margin-right: 0; width: 116.667px; padding: 2px 5px; }
 * html body #main-content.homepage form#searchform #submit { overflow-x: hidden; }
+body #main-content.homepage #about { font-size: 1.4em; }
+body #main-content.homepage #about blockquote { font-size: 2em; text-align: center; }
 body #main-content.postspage .title { margin-bottom: 15px; }
 body #main-content.postspage ol.posts li.special { background-color: #CFF1FF; }
 body #main-content.loginpage form#loginform #submit { float: right; }

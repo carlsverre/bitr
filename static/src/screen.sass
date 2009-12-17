@@ -11,10 +11,11 @@ body.bp
     :background-color #EEEEE2
     :height 100%
     +container
+  a
+    +hover-link
 
 a
   +link-colors(#00c, #0cc, #c0c, #ccc, #cc0)
-  +hover-link
 
 .note, #flash
   :background #FFF6BF
@@ -36,19 +37,20 @@ body
       :float left
       :margin-right 1em
       :margin-bottom 0px
+      :font-size 2em
 
     ul
       +horizontal-list
       a
-        :font-size 1.5em
+        :font-size 1.7em
         :line-height 1
-        :text-decoration none
         :text-transform lowercase
         &:after
           :content " | "
 
     #navigation
       :float left
+      :padding-top 2px
 
     #user_nav
       :float right
@@ -110,6 +112,8 @@ body
 
       h3
         :margin-bottom 5px
+        a
+          +hover-link
         
       .group
         +column(22)
@@ -226,6 +230,12 @@ body
         #submit
           +column(4, true)
           :padding 2px 5px
+
+      #about
+        :font-size 1.4em
+        blockquote
+          :font-size 2em
+          :text-align center
 
     &.postspage
       .title
