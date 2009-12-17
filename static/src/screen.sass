@@ -175,6 +175,7 @@ body
     
     ol.posts
       li.post
+        :text-align center
         +border-radius("10px")
         :background-color #FFF
         +column(22,true)
@@ -183,17 +184,33 @@ body
         :margin-bottom 0.5em
         &:first-child
           :font-size 1.4em
-          ul.meta
-            :font-size 0.57em
+          ul.meta li
+            :font-size 0.62em
+        a.flowplayer
+          :display block
+          +prepend(1)
+          :margin 10px 0 30px 0
+          :width 600px
+          :height 100px
+          
+        img
+          :margin 10px auto
+          :padding 10px
+          :background-color #000
         #content
+          :margin-left 10px
+          :text-align left
           :font-size 1.3em
           :font-family "Lucida Grande","Lucida Sans Unicode","Lucida Sans",Helvetica,Arial,sans-serif
           :color #735757
         ul.meta
-          +no-bullet
-          :color #619BC7
-          :font-family Verdana, sans-serif
-          :font-size 0.8em
+          +no-bullets
+          li
+            :color #619BC7
+            :font-family Verdana, sans-serif
+            :font-size 0.8em
+            :text-align left
+
 
     &.homepage
       form#searchform

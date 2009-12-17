@@ -129,12 +129,15 @@ body #main-content #friend_wall { display: inline; float: left; margin-right: 0;
 * html body #main-content #friend_wall { overflow-x: hidden; }
 body #main-content #friend_wall .friend_box { display: inline; float: left; margin-right: 10px; width: 85px; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.7) inset; padding: 2px; background-color: #E8EDF2; text-align: center; border: 1px solid #555; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
 * html body #main-content #friend_wall .friend_box { overflow-x: hidden; }
-body #main-content ol.posts li.post { border-radius: 10px; -moz-border-radius: 10px; -webkit-border-radius: 10px; background-color: #FFF; display: inline; float: left; margin-right: 0; width: 686.667px; padding: 3px; list-style-type: none; margin-left: 0px; margin-bottom: 0.5em; }
+body #main-content ol.posts li.post { text-align: center; border-radius: 10px; -moz-border-radius: 10px; -webkit-border-radius: 10px; background-color: #FFF; display: inline; float: left; margin-right: 0; width: 686.667px; padding: 3px; list-style-type: none; margin-left: 0px; margin-bottom: 0.5em; }
 * html body #main-content ol.posts li.post { overflow-x: hidden; }
 body #main-content ol.posts li.post:first-child { font-size: 1.4em; }
-body #main-content ol.posts li.post:first-child ul.meta { font-size: 0.57em; }
-body #main-content ol.posts li.post #content { font-size: 1.3em; font-family: "Lucida Grande","Lucida Sans Unicode","Lucida Sans",Helvetica,Arial,sans-serif; color: #735757; }
-body #main-content ol.posts li.post ul.meta { list-style-type: none; margin-left: 0px; color: #619BC7; font-family: Verdana, sans-serif; font-size: 0.8em; }
+body #main-content ol.posts li.post:first-child ul.meta li { font-size: 0.62em; }
+body #main-content ol.posts li.post a.flowplayer { display: block; padding-left: 31.667px; margin: 10px 0 30px 0; width: 600px; height: 100px; }
+body #main-content ol.posts li.post img { margin: 10px auto; padding: 10px; background-color: #000; }
+body #main-content ol.posts li.post #content { margin-left: 10px; text-align: left; font-size: 1.3em; font-family: "Lucida Grande","Lucida Sans Unicode","Lucida Sans",Helvetica,Arial,sans-serif; color: #735757; }
+body #main-content ol.posts li.post ul.meta li { list-style-type: none; margin-left: 0px; }
+body #main-content ol.posts li.post ul.meta li { color: #619BC7; font-family: Verdana, sans-serif; font-size: 0.8em; text-align: left; }
 body #main-content.homepage form#searchform #search { display: inline; float: left; margin-right: 10px; width: 528.333px; border: 1px solid #999; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.7) inset; margin-bottom: 3px; padding: 3px; border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
 * html body #main-content.homepage form#searchform #search { overflow-x: hidden; }
 body #main-content.homepage form#searchform #search:focus { -moz-box-shadow: 0 0 2px 1px #2878D4, 0 1px 2px rgba(0, 0, 0, 0.7) inset; }

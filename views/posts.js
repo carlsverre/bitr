@@ -17,6 +17,8 @@ var controller = {
     var tags = (post.tags=='Comma-delimited tags')?'':post.tags;
     var files = post.files || "";
 
+    if(content.length > 200) return die(sprintf("Your post is %d characters too long", content.length-200));
+
     var post_id;
 
     if(files != '') {
@@ -34,6 +36,7 @@ var controller = {
       var hash = md5(file);
 
       var path_raw    = conf.settings.encoding_dir   + hash + '.'+ext;
+      if(filetype == 'video') ext = 'flv';
       var path_proc   = conf.settings.abs_upload_dir + hash + '.'+ext;
 
       var flags = process.O_CREAT|process.O_WRONLY|process.O_TRUNC;
@@ -41,6 +44,8 @@ var controller = {
       var errorHandler = function () {
         debug.apply(null,arguments);
       }
+
+      info("Starting encoder",hash);
 
 // POSIX OPEN
               posix.open(path_raw, flags, process.S_IRWXU)
@@ -61,6 +66,7 @@ var controller = {
                     var post = posts[0];
                     post.columns.filename = hash+'.'+ext;
                     post.save();
+                    info("Encoding finished",hash);
                   }); // CLOSE POSTS GET
 
                 }); // CLOSE ENCODER
@@ -88,21 +94,29 @@ var controller = {
     });
   },
   remove: function (req, res, post_id) {
+    function die(msg,url) {
+      req.session.data.flash = "Error" + (msg)?msg:"";
+      res.redirect(url||req.headers.referer);
+    };
 
     var userid = req.session.data.user_id;
-    if(!userid) {
-      req.session.data.flash = "Your not logged in!";
-      res.redirect("/auth");
-      return;
-    }
+    if(!userid) return die("Your not logged in!", "/auth");
 
     Users.get({id: userid}).addCallback(function (rows) {
       var user = rows[0];
 
-      Posts.get({user_id: userid, id: post_id})
+      Posts.get({id: post_id})
       .addCallback(function (posts) {
         var post = posts[0];
+
+        if(userid != post.user.columns.id) return die("You don't own that!");
+
         post.remove();
+
+        if(post.columns.mediatype != 'r--') {
+          var path = conf.settings.abs_upload_dir + post.columns.filename;
+          posix.unlink(path);
+        }
 
         req.session.data.flash = "Success!";
         res.redirect(req.headers.referer);

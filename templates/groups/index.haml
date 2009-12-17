@@ -3,6 +3,7 @@
   %head
     %title= page_title
     = head_meta
+    = flowplayer
   %body.bp
     .container
       = header
@@ -33,6 +34,7 @@
           %ol.posts
             :foreach{ array: posts, value: "post" }
               %li.post{id:post.columns.id+""}
+                =get_media(post.columns.filename, post.columns.mediatype)
                 #content= post.columns.content
                 %ul.meta
                   %li Posted at 

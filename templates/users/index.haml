@@ -3,6 +3,7 @@
   %head
     %title= page_title
     = head_meta
+    = flowplayer
   %body.bp
     .container
       = header
@@ -23,8 +24,7 @@
         %ol.posts
           :foreach{ array: posts, value: "post" }
             %li.post{id:post.columns.id+""}
-              :if{condition: post.columns.mediatype != 'r--'}
-                %img{src: conf.settings.upload_dir+post.columns.filename}
+              =get_media(post.columns.filename, post.columns.mediatype)
               #content= post.columns.content
               %ul.meta
                 %li Posted at 
