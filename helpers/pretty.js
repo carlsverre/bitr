@@ -6,7 +6,7 @@ exports.pretty_date = function(d) {
     d.getMinutes(),
     (hours>12)?"PM":"AM",
     d.getDate(),
-    d.getMonth(),
+    d.getMonth()+1,
     d.getFullYear()
   );
 }
