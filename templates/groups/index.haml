@@ -48,6 +48,10 @@
                   %a{href: '/friends/'+friend.columns.username}
                     %img{src: gravatar(friend)}
                   =friend.columns.username
+                  %br
+                  :if{condition: this['user']}
+                    %a{href: sprintf('/users/%s/friends/%s',user.columns.username,friend.columns.username), title: "Add Friend"}
+                      [add]
                   :if{condition: this['owner'] && friend.columns.id != group.columns.owner }
                     %a{href: sprintf('/groups/%s/del/%s',group.columns.name,friend.columns.username), title: "delete"}
-                      [x]
+                      [del]

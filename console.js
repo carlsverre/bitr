@@ -8,10 +8,12 @@ var levelmap = [cl.log, cl.info, cl.warn, cl.error];
 function mk_pf(pref) {
   return function () {
     var d = new Date();
-    var s = "["+d.getHours() + ":" + d.getMinutes()+"]";
+    var s = "["+pad(d.getHours()) + ":" + pad(d.getMinutes())+"]";
     return s + " " +pref+": ";
   }
 }
+
+function pad(x) {return ((x+'').length==1)?'0'+x:x};
 
 cl.setLogPrefix   (mk_pf("LOG  "));
 cl.setInfoPrefix  (mk_pf("INFO "));

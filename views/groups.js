@@ -84,6 +84,7 @@ var controller = {
       group.save().addCallback(function () {
         var perm = new Perm(user.columns.id, null, group.columns.id, 'rrr');
         perm.save();
+        req.session.data.flash = "Success!";
         res.redirect(req.headers.referer);
       });
     });
@@ -103,7 +104,8 @@ var controller = {
         var group = groups[0];
 
         if(group.columns.owner != user_id) return die("You don't own that group!");
-
+        
+        req.session.data.flash = "Success!";
         group.remove();
         res.redirect(req.headers.referer);
       });
@@ -130,6 +132,7 @@ var controller = {
         }
 
         group.remove_user(username);
+        req.session.data.flash = "Success!";
         res.redirect(req.headers.referer);
       });
     });
@@ -163,6 +166,7 @@ var controller = {
         if(group.columns.owner != user_id) return die("You don't own that group!");
 
         group.add_user(friend_username, perms);
+        req.session.data.flash = "Success!";
         res.redirect(req.headers.referer);
       });
     });

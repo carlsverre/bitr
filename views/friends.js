@@ -3,12 +3,12 @@ var controller = {
     var died = false;
 
     function die(msg) {
-      req.session.data.flash = "Error" + (msg)?msg:"";
+      req.session.data.flash = "Error" + ((msg)?": "+msg:"");
       res.redirect(req.headers.referer);
       died = true;
     }
 
-    var friend_username = post.friend || die();
+    var friend_username = post.friend || die("Must supply a friend's username!");
     var text_perm       = (post.text=='on');
     var photo_perm      = (post.photo=='on');
     var video_perm      = (post.video=='on');
@@ -25,11 +25,14 @@ var controller = {
     Users.get({id: user_id}).addCallback(function (rows) {
       var user = rows[0];
 
+      if(friend_username == user.columns.username) {
+        return die("You can't friend yourself!");
+      }
+
       Users.get({username: friend_username}).addCallback(function (rows2) {
         var friend = rows2[0];
         if(!friend) {
-          die("Does not exist");
-          return;
+          return die("Does not exist");
         }
 
         var perm = new Perm(user_id, friend.columns.id);
@@ -38,6 +41,7 @@ var controller = {
         perm.set_video(video_perm);
         perm.save();
 
+        req.session.data.flash = "Success!";
         res.redirect(req.headers.referer);
       });
     });
@@ -69,11 +73,12 @@ var controller = {
       return;
     });
 
+    req.session.data.flash = "Success!";
     res.redirect(req.headers.referer);
   }
 }
 
 exports.urls = ['^/friends',
   ['POST',      '/add',               controller.add,       'multipart'],
-  ['GET',       '/delete/([^/]+)',      controller.del,               ]
+  ['GET',       '/delete/([^/]+)',    controller.del                   ]
 ];

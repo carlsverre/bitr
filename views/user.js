@@ -1,4 +1,28 @@
 var controller = {
+  listall: function (req, res) {
+    var o = {};
+    o.page_title = "Users";
+
+    var guest = !(req.session.data['user_id']);
+
+    var exec = function (user) {
+      o.userpage = false;
+      o.user = user;
+      Users.get().addCallback(function (users) {
+        o.users = users;
+        render(req, "users", "listall", o, function(html) {
+          res.simpleHtml(200, html);
+        });
+      });
+    }
+
+    if(guest) exec(null);
+    else {
+      Users.get({id:req.session.data.user_id}).addCallback(function (data) {
+        exec(data[0]);
+      });
+    }
+  },
   index: function (req, res, username) {
     var o = {};
     o.page_title = username + " | Home";
@@ -107,9 +131,13 @@ var controller = {
       });
     }
   },
-  friends: function (req, res, username) {
+  friends: function (req, res, username, friendname) {
     var o = {};
     o.page_title = username + " | Friends";
+    if(friendname != new String(undefined)) {
+      o.flash = "Select your new friend's permissions and click add!";
+      o.friendname = friendname;
+    }
 
     var guest = !(req.session.data['user_id']);
 
@@ -179,7 +207,6 @@ var controller = {
   save_settings: function (req, res, post) {
     var died = false;
     function die(msg, url) {
-      debug(msg);
       if(!died) {
         req.session.data.flash = "Error" + (msg)?msg:" ";
         res.redirect(url || req.headers.referer);
@@ -188,8 +215,7 @@ var controller = {
     }
 
     if(!post) {
-      die();
-      return;
+      return die();
     }
 
     // passwords
@@ -217,17 +243,22 @@ var controller = {
       user.columns.signature = post.signature  || user.columns.signature;
       
       user.save().addCallback(function () {
-      debug("saved");
+        req.session.data.flash = "Success!";
+
         res.redirect(req.headers.referer);
+      }).addErrback(function (msg) {
+        debug("user.settings_save error: " + msg);
+        die();
       });
     });
   }
 }
 
 exports.urls = ['^/users',
-  ['GET',       '/([^/]+)/?$',          controller.index                         ],
-  ['GET',       '/([^/]+)/friends/?$',  controller.friends                       ],
-  ['GET',       '/([^/]+)/groups/?$',   controller.groups                        ],
-  ['GET',       '/([^/]+)/settings/?$', controller.settings                      ],
-  ['POST',      '/save_settings/?$',    controller.save_settings,   "multipart"  ]
+  ['GET',   '/?$',                        controller.listall                      ],
+  ['GET',   '/([^/]+)/?$',                controller.index                        ],
+  ['GET',   '/([^/]+)/friends/?([^/]+)?', controller.friends                      ],
+  ['GET',   '/([^/]+)/groups/?$',         controller.groups                       ],
+  ['GET',   '/([^/]+)/settings/?$',       controller.settings                     ],
+  ['POST',  '/save_settings/?$',          controller.save_settings,   "multipart" ]
 ];

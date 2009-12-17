@@ -1,0 +1,20 @@
+!!! strict
+%html{ xmlns: "http://www.w3.org/1999/xhtml" }
+  %head
+    %title= page_title
+    = head_meta
+  %body.bp
+    .container
+      = header
+      #main-content.friendpage
+        = users_title
+        #friend_wall
+          :foreach{ array: users, value: "person" }
+              .friend_box
+                %a{href: '/users/'+person.columns.username}
+                  %img{src: gravatar(person)}
+                =person.columns.username
+                %br
+                :if{condition: this['user']}
+                  %a{href: sprintf('/users/%s/friends/%s',user.columns.username,person.columns.username), title: "Add Friend"}
+                    [add]

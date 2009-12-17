@@ -1,5 +1,4 @@
 BITR TODO:
-  * implement users page (list users)
   * implement photos/videos
   * post view (show all the parents and children of a post)
   * reply to post

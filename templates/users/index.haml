@@ -9,6 +9,8 @@
       #main-content.userpage
         = users_title
         :if{condition: userpage}
+          :if{condition: 'flash' in this && flash != ''}
+            .note= flash
           %form#postform{ action: "/posts/create", method: "post", enctype: "multipart/form-data" }
             %h3 What's happening?
             %textarea#content{ name: "content" }
@@ -24,8 +26,12 @@
               #content= post.columns.content
               %ul.meta
                 %li Posted at 
-                  =post.columns.creation_date
-                :if{condition: userpage}
-                  %li Posted by 
+                  =pretty_date(post.columns.creation_date)
+                  :if{condition: userpage}
+                    &nbsp;by 
                     %a{href:"/users/"+post.user.columns.username}
                       =(post.user.columns.username==user.columns.username)?"you":post.user.columns.username
+                    :if{condition:post.user.columns.id==user.columns.id}
+                      &nbsp;
+                      %a{href:"/posts/delete/"+post.columns.id}
+                        remove post

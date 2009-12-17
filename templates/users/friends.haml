@@ -12,7 +12,7 @@
           :if{condition: 'flash' in this && flash != ''}
             .note= flash
           %form#friendform{ action: "/friends/add", method: "post", enctype: "multipart/form-data" }
-            %input#friend{ type: "text", name: "friend", value: "Friends username" }
+            %input#friend{ type: "text", name: "friend", value: (this['friendname'] || "Friends username") }
             %input#submit{ type: "submit", value: "Add" }
             #perm_group
               %b Permissions: 
@@ -28,6 +28,10 @@
                 %a{href: '/users/'+friend.columns.username}
                   %img{src: gravatar(friend)}
                 =friend.columns.username
+                %br
+                :if{condition: this['user']}
+                  %a{href: sprintf('/users/%s/friends/%s',user.columns.username,friend.columns.username), title: "Add Friend"}
+                    [add]
                 :if{condition: userpage}
                   %a{href: '/friends/delete/'+friend.columns.id, title: "delete"}
-                    [x]
+                    [del]

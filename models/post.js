@@ -68,7 +68,11 @@ exports.Post = function (post_id, user, content, tags, private, mediatype, filen
     return promise;
   }
 
-  //TODO: other post methods?
+
+  this.remove = function () {
+    var sql = sprintf("DELETE FROM %s WHERE id=?", tname);
+    return DB.query(sql, [this.columns.id]);
+  }
 }
 
 // function builder

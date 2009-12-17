@@ -27,6 +27,7 @@ var controller = {
       var user = rows[0];
       if (user && user.auth(password)) {
         req.session.data.user_id = user.columns.id;
+        user.columns.last_login = new Date();
 
         res.redirect("/users/" + username);
       } else {
