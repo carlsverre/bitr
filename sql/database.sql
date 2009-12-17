@@ -38,6 +38,25 @@ CREATE TABLE posts (
     index_col       tsvector
 );
 
+-- RELATIONS
+
+-- references users.id groups.id
+CREATE TABLE user_to_group (
+    id              SERIAL PRIMARY KEY UNIQUE,
+    group_id        INT NOT NULL REFERENCES groups(id),
+    user_id         INT NOT NULL REFERENCES users(id),
+    perms           CHAR(3)
+);
+
+-- references users.id
+CREATE TABLE friends (
+    id              SERIAL PRIMARY KEY UNIQUE,
+    user_id         INT NOT NULL REFERENCES users(id),
+    friend_id       INT NOT NULL REFERENCES users(id),
+    perms           CHAR(3),
+    creation_date   TIMESTAMP DEFAULT current_timestamp
+);
+
 -- SEARCH INDEX FOR POSTS (and trigger)
 CREATE INDEX posts_idx ON posts USING gin(index_col);
 CREATE FUNCTION posts_trigger() RETURNS trigger AS $$
@@ -56,23 +75,4 @@ ON posts FOR EACH ROW EXECUTE PROCEDURE posts_trigger();
 CREATE TABLE sessions (
     session_id      VARCHAR(16),
     session         TEXT
-);
-
--- RELATIONS
-
--- references users.id groups.id
-CREATE TABLE user_to_group (
-    id              SERIAL PRIMARY KEY UNIQUE,
-    group_id        INT NOT NULL REFERENCES groups(id),
-    user_id         INT NOT NULL REFERENCES users(id),
-    perms           CHAR(3)
-);
-
--- references users.id
-CREATE TABLE friends (
-    id              SERIAL PRIMARY KEY UNIQUE,
-    user_id         INT NOT NULL REFERENCES users(id),
-    friend_id       INT NOT NULL REFERENCES users(id),
-    perms           CHAR(3),
-    creation_date   TIMESTAMP DEFAULT current_timestamp
 );

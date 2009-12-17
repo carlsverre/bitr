@@ -1,6 +1,4 @@
 BITR TODO:
-  * post view (show all the parents and children of a post)
-  * reply to post
   * live updating
 
 PROJECT TODO:

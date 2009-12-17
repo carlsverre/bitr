@@ -76,9 +76,11 @@ exports.Post = function (post_id, user, content, tags, private, mediatype, filen
 }
 
 // function builder
-function rows_to_posts_with_user (promise) {
+function rows_to_posts_with_user (promise, hash) {
+  if(hash === undefined) hash = false;
   return function (rows) {
-    var posts = [];
+    if(hash) var posts = {};
+    else var posts = [];
     var users = {};
 
     function get_next_post(i) {
@@ -95,12 +97,14 @@ function rows_to_posts_with_user (promise) {
           var user = data[0];
           users[user_id] = user;
           post.user = user;
-          posts.push(post);
+          if(hash) posts[post.columns.id] = post;
+          else posts.push(post);
           get_next_post(i+1);
         });
       } else {
         post.user = user;
-        posts.push(post);
+        if(hash) posts[post.columns.id] = post;
+        else posts.push(post);
         get_next_post(i+1);
       }
     }
@@ -135,8 +139,17 @@ exports.Posts = {
 
     return promise;
   },
-  // gets all posts that match hash
-  // ex. hash = {id:3}
+  get_posts_with_response_to: function(post_id){
+    var promise = new process.Promise();
+
+    var sql = sprintf("SELECT * FROM %s p"+
+    " WHERE response_to IS NOT NULL OR id=?"+
+    " OR id in (select response_to from posts where id=?)", tname);
+    DB.query(sql, [post_id,post_id])
+    .addCallback(rows_to_posts_with_user(promise,true));
+
+    return promise;
+  },
   get: function (hash, perms) {
     var promise = new process.Promise();
 

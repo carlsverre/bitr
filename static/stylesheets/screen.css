@@ -143,6 +143,8 @@ body #main-content.homepage form#searchform #search { display: inline; float: le
 body #main-content.homepage form#searchform #search:focus { -moz-box-shadow: 0 0 2px 1px #2878D4, 0 1px 2px rgba(0, 0, 0, 0.7) inset; }
 body #main-content.homepage form#searchform #submit { display: inline; float: left; margin-right: 0; width: 116.667px; padding: 2px 5px; }
 * html body #main-content.homepage form#searchform #submit { overflow-x: hidden; }
+body #main-content.postspage .title { margin-bottom: 15px; }
+body #main-content.postspage ol.posts li.special { background-color: #CFF1FF; }
 body #main-content.loginpage form#loginform #submit { float: right; }
 body #main-content.userpage form#postform #content { display: inline; float: left; margin-right: 0; width: 686.667px; border: 1px solid #999; -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.7) inset; margin-bottom: 3px; }
 * html body #main-content.userpage form#postform #content { overflow-x: hidden; }

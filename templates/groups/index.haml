@@ -42,6 +42,14 @@
                     &nbsp;by 
                     %a{href:"/users/"+post.user.columns.username}
                       =post.user.columns.username
+                  %li
+                    Actions: 
+                    %a{href:sprintf("/posts/%d",post.columns.id)}
+                      Post Chain
+                    :if{condition:this['user']}
+                      &nbsp;
+                      %a{href:sprintf("/users/%s/%d",user.columns.username, post.columns.id)}
+                        Respond to this post
         :if{condition: this['users']}
           %h2 Members
           #friend_wall

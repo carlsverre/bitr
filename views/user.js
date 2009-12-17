@@ -23,7 +23,7 @@ var controller = {
       });
     }
   },
-  index: function (req, res, username) {
+  index: function (req, res, username, response_to) {
     var o = {};
     o.page_title = username + " | Home";
 
@@ -39,6 +39,7 @@ var controller = {
           o.posts = posts;
           o.profile = user;
           o.userpage = true;
+          o.response_to = response_to;
           render(req, "users", "index", o, function(html) {
             res.simpleHtml(200, html);
           });
@@ -256,8 +257,8 @@ var controller = {
 
 exports.urls = ['^/users',
   ['GET',   '/?$',                        controller.listall                      ],
-  ['GET',   '/([^/]+)/?$',                controller.index                        ],
-  ['GET',   '/([^/]+)/friends/?([^/]+)?', controller.friends                      ],
+  ['GET',   '/([^/]+)/?(\\d+)?$',        controller.index                        ],
+  ['GET',   '/([^/]+)/friends/?([^/]+)?$',controller.friends                      ],
   ['GET',   '/([^/]+)/groups/?$',         controller.groups                       ],
   ['GET',   '/([^/]+)/settings/?$',       controller.settings                     ],
   ['POST',  '/save_settings/?$',          controller.save_settings,   "multipart" ]

@@ -1,6 +1,64 @@
 var posix = require('posix');
 
 var controller = {
+  show: function (req, res, post_id) {
+    var o = {
+      page_title: "Bitr | Viewing post #" + post_id
+    }
+
+    var guest = !(req.session.data['user_id']);
+
+    function exec(user) {
+      o.user = user;
+
+      Posts.get_posts_with_response_to(post_id)
+      .addCallback(function (posts) {
+        var responses = {};
+
+        for (var k in posts) {
+          var p = posts[k];
+          if(p.columns['response_to']) {
+            if(!responses[p.columns.response_to]) {
+              responses[p.columns.response_to] = [p];
+            } else responses[p.columns.response_to].push(p);
+          }
+        }
+
+
+        var post_chain = [];
+        var children = responses[post_id];
+        var post = posts[post_id];
+
+        while(post !== undefined || children !== undefined) {
+          debug(inspect(post));
+          if(post !== undefined) {
+            post_chain.unshift(post);
+            post = posts[post.columns.response_to || -1];
+          }
+          if(children !== undefined) {
+            for (var k in children) {
+              var child = children[k];
+              post_chain.push(child);
+            }
+            children = responses[child.columns.id];
+          }
+        }
+
+        o.posts = post_chain;
+        o.post_id = post_id;
+        render(req, "posts", "index", o, function(html) {
+          res.simpleHtml(200, html);
+        });
+      });
+    }
+
+    if(guest) exec(null);
+    else {
+      Users.get({id:req.session.data.user_id}).addCallback(function (data) {
+        exec(data[0]);
+      });
+    }
+  },
   create: function (req, res, post) {
     var died = false;
     function die(msg,url) {
@@ -13,7 +71,7 @@ var controller = {
 
     var content = post.content || die("Your post has to have some content...");
     var private = (post.private=='on');
-    var response_to = post.response_to;
+    var response_to = post.response_to || '';
     var tags = (post.tags=='Comma-delimited tags')?'':post.tags;
     var files = post.files || "";
 
@@ -126,6 +184,7 @@ var controller = {
 }
 
 exports.urls = ['^/posts',
+  ['GET',       '/([^/]+)/?',          controller.show                   ],
   ['POST',      '/create$',            controller.create,     'multipart'],
   ['GET',       '/delete/([^/]+)',     controller.remove                 ],
 ];

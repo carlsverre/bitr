@@ -13,6 +13,7 @@
           :if{condition: 'flash' in this && flash != ''}
             .note= flash
           %form#postform{ action: "/posts/create", method: "post", enctype: "multipart/form-data" }
+            %input{style:'display:none;', name: 'response_to', value: (this['response_to'])?response_to+'':''}
             %h3 What's happening?
             %textarea#content{ name: "content" }
             %input#tags{ type: "text", name: "tags", value: "Comma-delimited tags" }
@@ -33,7 +34,15 @@
                     &nbsp;by 
                     %a{href:"/users/"+post.user.columns.username}
                       =(post.user.columns.username==user.columns.username)?"you":post.user.columns.username
-                    :if{condition:post.user.columns.id==user.columns.id}
-                      &nbsp;
-                      %a{href:"/posts/delete/"+post.columns.id}
-                        remove post
+                %li
+                  Actions: 
+                  %a{href:sprintf("/posts/%d",post.columns.id)}
+                    Post Chain
+                  :if{condition:this['user']}
+                    &nbsp;
+                    %a{href:sprintf("/users/%s/%d",user.columns.username, post.columns.id)}
+                      Respond to this post
+                  :if{condition:post.user.columns.id==user.columns.id}
+                    &nbsp;
+                    %a{href:"/posts/delete/"+post.columns.id}
+                      remove post
