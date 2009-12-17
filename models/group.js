@@ -97,9 +97,6 @@ exports.Groups = {
     var promise = new process.Promise();
 
     DB.simple_select(tname, null, hash).addCallback(function (rows) {
-      puts("Selected from Groups:");
-      DB.pretty_print(rows);
-
       var groups = [];
 
       for (var i in rows) {
@@ -122,9 +119,6 @@ exports.Groups = {
                     
     DB.query(sql, [user.columns.id])
     .addCallback(function (rows) {
-      puts("Selected from Groups:");
-      DB.pretty_print(rows);
-
       var groups = [];
 
       for (var i in rows) {

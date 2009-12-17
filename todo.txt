@@ -1,5 +1,5 @@
 BITR TODO:
-  * implement photos/videos
+  * implement photos/videos (Half done)
   * post view (show all the parents and children of a post)
   * reply to post
   * live updating

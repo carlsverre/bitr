@@ -133,9 +133,6 @@ exports.Users = {
     var promise = new process.Promise();
 
     DB.simple_select(tname, null, hash).addCallback(function (rows) {
-      puts("Selected from Users:");
-      DB.pretty_print(rows);
-
       var users = [];
 
       for (var i in rows) {

@@ -17,12 +17,14 @@
             %input#tags{ type: "text", name: "tags", value: "Comma-delimited tags" }
             %label Private?
             %input#private{ type: "checkbox", name: "private" }
-            %label Upload a media file too
+            %label Upload a media file too: 
             %input#file{ type: "file", name: "file" }
             %input#submit{ type: "submit", value: "Shout!" }
         %ol.posts
           :foreach{ array: posts, value: "post" }
             %li.post{id:post.columns.id+""}
+              :if{condition: post.columns.mediatype != 'r--'}
+                %img{src: conf.settings.upload_dir+post.columns.filename}
               #content= post.columns.content
               %ul.meta
                 %li Posted at 

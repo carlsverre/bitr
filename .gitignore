@@ -1,3 +1,6 @@
-cache/*.js
 conf.js
 static/src/.sass-cache/*
+static/uploads/*
+mojo_render.js
+*.swp
+encoding_tmp/*

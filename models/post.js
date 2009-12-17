@@ -49,7 +49,7 @@ exports.Post = function (post_id, user, content, tags, private, mediatype, filen
     if(that.columns.id != null) {
       // update
       DB.simple_update(tname, set=that.columns, where={id: that.columns.id}).addCallback(function(results) { 
-        puts("Updated Post: " + that.columns.username);
+        puts("Updated Post: " + that.columns.content + " ["+that.columns.id+"]");
         promise.emitSuccess();
       });
     } else {
@@ -57,7 +57,7 @@ exports.Post = function (post_id, user, content, tags, private, mediatype, filen
         if('id' in results[0]) {
           that.columns['id'] = results[0].id;
           puts("Created Post: " + that.columns.content + " ["+that.columns.id+"]");
-          promise.emitSuccess();
+          promise.emitSuccess(that.columns.id);
         } else {
           debug("Post.save unknown error:");
           DB.pretty_print(results);
@@ -141,8 +141,6 @@ exports.Posts = {
     var promise = new process.Promise();
 
     var parse_posts = function(rows) {
-      puts("Selected from Posts:");
-      DB.pretty_print(rows);
 
       var posts = [];
       var users = {};
