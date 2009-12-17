@@ -14,11 +14,11 @@
           %form#postform{ action: "/posts/create", method: "post", enctype: "multipart/form-data" }
             %h3 What's happening?
             %textarea#content{ name: "content" }
-            %br
             %input#tags{ type: "text", name: "tags", value: "Comma-delimited tags" }
-            %br
             %label Private?
             %input#private{ type: "checkbox", name: "private" }
+            %label Upload a media file too
+            %input#file{ type: "file", name: "file" }
             %input#submit{ type: "submit", value: "Shout!" }
         %ol.posts
           :foreach{ array: posts, value: "post" }

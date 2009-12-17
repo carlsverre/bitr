@@ -36,8 +36,8 @@
                 #content= post.columns.content
                 %ul.meta
                   %li Posted at 
-                    =post.columns.creation_date
-                  %li Posted by 
+                    =pretty_date(post.columns.creation_date)
+                    &nbsp;by 
                     %a{href:"/users/"+post.user.columns.username}
                       =post.user.columns.username
         :if{condition: this['users']}
@@ -49,9 +49,9 @@
                     %img{src: gravatar(friend)}
                   =friend.columns.username
                   %br
-                  :if{condition: this['user']}
+                  :if{condition: this['user'] && (user.columns.id != friend.columns.id)}
                     %a{href: sprintf('/users/%s/friends/%s',user.columns.username,friend.columns.username), title: "Add Friend"}
                       [add]
                   :if{condition: this['owner'] && friend.columns.id != group.columns.owner }
-                    %a{href: sprintf('/groups/%s/del/%s',group.columns.name,friend.columns.username), title: "delete"}
+                    %a{href: sprintf('/groups/%s/del/%s',group.columns.name,friend.columns.username), title: "Remove from group"}
                       [del]
