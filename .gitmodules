@@ -19,3 +19,6 @@
 [submodule "lib/consolelog"]
 	path = lib/consolelog
 	url = git://github.com/jazzychad/consolelog.node.js.git
+[submodule "lib/postgres-js"]
+	path = lib/postgres-js
+	url = git@github.com:carlsverre/postgres-js.git
