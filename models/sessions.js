@@ -6,6 +6,7 @@ exports.Sessions = {
   get: function () {
     var promise = new process.Promise();
 
+    info("loading sessions from db");
     DB.simple_select(tname, null, null).addCallback(function (rows) {
       var sessions_a = [];
 
@@ -22,7 +23,7 @@ exports.Sessions = {
     return promise;
   },
   add: function (session_id, session, update) {
-    debug(((update)?'updating':'saving')+" session",session_id);
+    info(((update)?'updating':'saving')+" session",session_id);
     var columns = {
       session_id: session_id,
       session: session
@@ -32,7 +33,7 @@ exports.Sessions = {
     else DB.simple_insert(tname, columns, false);
   },
   remove: function (session_id) {
-    debug("removing session",session_id);
+    info("removing session",session_id);
     var sql = sprintf("DELETE FROM %s where session_id=?", tname);
     DB.query(sql, [session_id]);
   }

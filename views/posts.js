@@ -75,6 +75,8 @@ var controller = {
     var tags = (post.tags=='Comma-delimited tags')?'':post.tags;
     var files = post.files || "";
 
+    if(response_to == 'undefined') response_to='';
+
     if(content.length > 200) return die(sprintf("Your post is %d characters too long", content.length-200));
 
     var post_id;
@@ -103,7 +105,7 @@ var controller = {
         debug.apply(null,arguments);
       }
 
-      info("Starting encoder",hash);
+      error("Starting encoder",hash);
 
 // POSIX OPEN
               posix.open(path_raw, flags, process.S_IRWXU)
@@ -117,7 +119,11 @@ var controller = {
 // CALL ENCODER
                 var encoder_a = conf.encoders[filetype](path_raw, path_proc);
                 var encoder = process.createChildProcess.apply(null, encoder_a);
+                encoder.addListener('err', function (err) {
+                  puts(err);
+                });
                 encoder.addListener("exit", function (code) {
+
                   posix.unlink(path_raw);
                   
                   Posts.get({id:post_id}).addCallback(function (posts) {
@@ -184,7 +190,7 @@ var controller = {
 }
 
 exports.urls = ['^/posts',
-  ['GET',       '/([^/]+)/?',          controller.show                   ],
+  ['GET',       '/([0-9]+)/?',          controller.show                   ],
   ['POST',      '/create$',            controller.create,     'multipart'],
   ['GET',       '/delete/([^/]+)',     controller.remove                 ],
 ];

@@ -55,7 +55,7 @@
           #friend_wall
             :foreach{ array: users, value: "friend" }
                 .friend_box
-                  %a{href: '/friends/'+friend.columns.username}
+                  %a{href: '/users/'+friend.columns.username}
                     %img{src: gravatar(friend)}
                   =friend.columns.username
                   %br

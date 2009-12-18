@@ -33,7 +33,7 @@
                   :if{condition: userpage}
                     &nbsp;by 
                     %a{href:"/users/"+post.user.columns.username}
-                      =(post.user.columns.username==user.columns.username)?"you":post.user.columns.username
+                      =(this['user'] && post.user.columns.username==user.columns.username)?"you":post.user.columns.username
                 %li
                   Actions: 
                   %a{href:sprintf("/posts/%d",post.columns.id)}
@@ -42,7 +42,7 @@
                     &nbsp;
                     %a{href:sprintf("/users/%s/%d",user.columns.username, post.columns.id)}
                       Respond to this post
-                  :if{condition:post.user.columns.id==user.columns.id}
+                  :if{condition:this['user'] &&post.user.columns.id==user.columns.id}
                     &nbsp;
                     %a{href:"/posts/delete/"+post.columns.id}
                       remove post
