@@ -1,6 +1,9 @@
 Readme
 ======
 
+Tested with 
+Node.js v0.1.21-17-ge801f42
+
 Dependencies:
   
   * node.js (nodejs.org)
