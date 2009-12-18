@@ -105,7 +105,7 @@ var controller = {
         debug.apply(null,arguments);
       }
 
-      error("Starting encoder",hash);
+      info("Starting encoder",hash);
 
 // POSIX OPEN
               posix.open(path_raw, flags, process.S_IRWXU)
@@ -119,11 +119,13 @@ var controller = {
 // CALL ENCODER
                 var encoder_a = conf.encoders[filetype](path_raw, path_proc);
                 var encoder = process.createChildProcess.apply(null, encoder_a);
-                encoder.addListener('err', function (err) {
+                encoder.addListener('error', function (err) {
+                  error(err);
+                });
+                encoder.addListener('output', function (err) {
                   puts(err);
                 });
                 encoder.addListener("exit", function (code) {
-
                   posix.unlink(path_raw);
                   
                   Posts.get({id:post_id}).addCallback(function (posts) {

@@ -37,7 +37,7 @@ var encoders = {
     return ['convert',['-resize',"600x600\>",in_f,out_f]];
   },
   video:          function(in_f,out_f) {
-    return ['ffmpeg',['-i',in_f,'-vcodec','flv',out_f]];
+    return ['ffmpeg',['-y','-i',in_f,'-vcodec','flv',out_f]];
   }
 }
 
