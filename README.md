@@ -1,13 +1,16 @@
 Readme
 ======
-This will eventually be filled out...  All you need to know is that this
-project uses node.js (which you will need to get) and then you have to 
-initialize the submodules in the repo:
+
+Dependencies:
+  
+  * node.js (nodejs.org)
+
+Clone the repo then run the following commands to grab the submodules
 
 	$ git submodule init
 	$ git submodule update
 
-The final step is coping conf.js.example to conf.js and filling it out.
+The final step is copying conf.js.example to conf.js and filling it out.
 
 Then just run "node bitr.js" and your off to the races!
 

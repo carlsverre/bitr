@@ -213,5 +213,17 @@ exports.Posts = {
     .addCallback(rows_to_posts_with_user(promise));
 
     return promise;
+  },
+  fix_child_references: function (post_id) {
+    var promise = new process.Promise();
+    var sql = sprintf("UPDATE posts SET response_to=NULL"+
+    " WHERE response_to=?", tname);
+
+    DB.query(sql, [post_id])
+    .addCallback(function() {
+      promise.emitSuccess();
+    });
+
+    return promise;
   }
 }

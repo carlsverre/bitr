@@ -3,6 +3,8 @@ exports.get_media = function (filename,mediatype) {
   var img = "<img src='%s'>";
   if(filename == 'default' && mediatype != 'r--')
     return sprintf(img,conf.settings.encoding_img);
+  if(filename == 'error' && mediatype != 'r--')
+    return sprintf(img,conf.settings.error_img);
   switch(mediatype) {
     case 'r--':
       return "";

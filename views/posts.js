@@ -30,9 +30,9 @@ var controller = {
         var post = posts[post_id];
 
         while(post !== undefined || children !== undefined) {
-          debug(inspect(post));
           if(post !== undefined) {
             post_chain.unshift(post);
+            debug(post.columns.response_to);
             post = posts[post.columns.response_to || -1];
           }
           if(children !== undefined) {
@@ -119,20 +119,19 @@ var controller = {
 // CALL ENCODER
                 var encoder_a = conf.encoders[filetype](path_raw, path_proc);
                 var encoder = process.createChildProcess.apply(null, encoder_a);
-                encoder.addListener('error', function (err) {
-                  error(err);
-                });
-                encoder.addListener('output', function (err) {
-                  puts(err);
-                });
                 encoder.addListener("exit", function (code) {
+                  var final_filename = hash+'.'+ext;
+                  if(code!=0) {
+                    error("Encoding error",hash);
+                    final_filename = "error";
+                  }
                   posix.unlink(path_raw);
                   
                   Posts.get({id:post_id}).addCallback(function (posts) {
                     var post = posts[0];
-                    post.columns.filename = hash+'.'+ext;
+                    post.columns.filename = final_filename;
                     post.save();
-                    info("Encoding finished",hash);
+                    info("Encoding finished",hash,(code==0)?'':"with error");
                   }); // CLOSE POSTS GET
 
                 }); // CLOSE ENCODER
@@ -175,17 +174,20 @@ var controller = {
       .addCallback(function (posts) {
         var post = posts[0];
 
-        if(userid != post.user.columns.id) return die("You don't own that!");
+        Posts.fix_child_references(post_id)
+        .addCallback(function () {
+          if(userid != post.user.columns.id) return die("You don't own that!");
 
-        post.remove();
+          post.remove();
 
-        if(post.columns.mediatype != 'r--') {
-          var path = conf.settings.abs_upload_dir + post.columns.filename;
-          posix.unlink(path);
-        }
+          if(post.columns.mediatype != 'r--') {
+            var path = conf.settings.abs_upload_dir + post.columns.filename;
+            posix.unlink(path);
+          }
 
-        req.session.data.flash = "Success!";
-        res.redirect(req.headers.referer);
+          req.session.data.flash = "Success!";
+          res.redirect(req.headers.referer);
+        });
       });
     });
   }

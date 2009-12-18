@@ -1,15 +1,15 @@
 [submodule "lib/node-router"]
 	path = lib/node-router
-	url = git@github.com:carlsverre/node-router.git
+	url = git://github.com/carlsverre/node-router.git
 [submodule "lib/node_postgres"]
 	path = lib/node_postgres
-	url = git@github.com:carlsverre/node_postgres.git
+	url = git://github.com/carlsverre/node_postgres.git
 [submodule "lib/haml-js"]
 	path = lib/haml-js
-	url = git@github.com:carlsverre/haml-js.git
+	url = git://github.com/carlsverre/haml-js.git
 [submodule "lib/consolelog"]
 	path = lib/consolelog
 	url = git://github.com/jazzychad/consolelog.node.js.git
 [submodule "lib/postgres-js"]
 	path = lib/postgres-js
-	url = git@github.com:carlsverre/postgres-js.git
+	url = git://github.com/carlsverre/postgres-js.git
