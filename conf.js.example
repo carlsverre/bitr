@@ -1,16 +1,61 @@
-var connection_info = {};
-connection_info.hostaddr = "HOSTIP";
-connection_info.port = HOSTPORT
-connection_info.dbname = "DBNAME";
-connection_info.user = "DBUSER";
-connection_info.password = "DBPASS";
+var posix = require('posix');
 
-function build_conninfo(conninfo) {
-	result = "";
-	for (key in conninfo) {
-		result += key + "=" + conninfo[key] + " ";
-	}
-	return result;
+var connection_info = {
+  hostaddr:       "127.0.0.1",
+  port:           5432,
+  dbname:         "DBNAME",
+  user:           "USERNAME",
+  password:       "PASSWORD"
 }
 
-exports.conninfo = build_conninfo(connection_info);
+var tables = {
+  users:          "users",
+  posts:          "posts",
+  groups:         "groups",
+  sessions:       "sessions",
+  friends:        "friends",
+  usergroup:      "user_to_group"
+}
+
+var root_dir =    "/home/carl/dev/javascript/bitr/";
+var settings = {
+  url:            "http://7-up:8080",
+  static:         "static/",
+  encoding_img:   "/static/processing.jpg",
+  play_img:       "/static/play.jpg",
+  encoding_dir:   root_dir+"encoding_tmp/",
+  abs_upload_dir: root_dir+"static/uploads/",
+  upload_dir:     "/static/uploads/",
+  cache_time:     1,
+  partials_dir:   "templates/partials/",
+  helpers_dir:    "helpers/",
+  gravatar_default: "monsterid"   // options: wavatar, identicon, monsterid, or a url-encoded url to an image
+}
+
+var encoders = {
+  image:          function(in_f,out_f) {
+    return ['convert',['-resize',"600x600\>",in_f,out_f]];
+  },
+  video:          function(in_f,out_f) {
+    return ['ffmpeg',['-i',in_f,'-vcodec','flv',out_f]];
+  }
+}
+
+var helpers = []
+
+posix.readdir(settings.helpers_dir)
+.addCallback(function (list) {
+  for(var i in list) {
+    var helper = list[i].replace(/\..*$/,'');
+    if(helper == '') continue;
+    helpers.push('./' + settings.helpers_dir + helper);
+  }
+});
+
+process.mixin(exports, {
+  dbinfo:         connection_info,
+  tables:         tables,
+  settings:       settings,
+  helpers:        helpers,
+  encoders:       encoders
+});
